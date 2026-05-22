@@ -534,14 +534,14 @@ function renderTask(t, canDel) {
     noteHtml = '<div class="note-disp">💬 '+t.note+'</div>';
   }
   var html = '<div class="task-card p-'+t.priorite+(t.done?' is-done':'')+'"><div class="task-top">';
-  html += '<input type="checkbox" class="task-cb" '+(t.done?'checked':'')+' onchange="toggleDone(\''+t.id+\'")"/>';
+  html += '<input type="checkbox" class="task-cb" '+(t.done?'checked':'')+' onchange="toggleDone(\''+t.id+'\')" />';
   html += '<div class="task-body"><div class="task-txt'+(t.done?' struck':'')+'">'+t.texte+'</div>';
   html += '<div class="task-meta"><span class="pbadge '+(t.done?'pb-done':pcls)+'">'+(t.done?'✓ Terminée':plbl)+'</span>';
   html += '<span class="task-agent">'+agentAv+' '+agentName+'</span>';
   html += '<span class="task-time">'+ago+dur+'</span></div>'+noteHtml+'</div>';
   html += '<div class="task-actions">';
-  html += '<button class="ibtn" onclick="toggleNote(\''+t.id+\'")"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></button>';
-  if (canDel) html += '<button class="ibtn danger" onclick="deleteTask(\''+t.id+\'")"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>';
+  html += '<button class="ibtn" onclick="toggleNote(\''+t.id+'\')"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg></button>';
+  if (canDel) html += '<button class="ibtn danger" onclick="deleteTask(\''+t.id+'\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>';
   html += '</div></div></div>';
   return html;
 }
@@ -611,7 +611,7 @@ function renderAdmin() {
     html += '<div class="user-info"><div class="user-name">'+u.nom+(isSelf?' <span style="font-size:11px;color:var(--text3)">(vous)</span>':'')+'</div><div class="user-email">'+u.email+'</div></div>';
     html += '<select class="role-sel" id="role-'+u.id+'"><option value="admin" '+(u.role==='admin'?'selected':'')+'>Admin</option><option value="responsable" '+(u.role==='responsable'?'selected':'')+'>Responsable</option><option value="menage" '+(u.role==='menage'?'selected':'')+'>Ménage</option><option value="technique" '+(u.role==='technique'?'selected':'')+'>Technique</option></select>';
     html += '<button class="btn-ok" onclick="saveRole(\''+u.id+'\')">OK</button>';
-    if (!isSelf) html += '<button class="ibtn danger" onclick="deleteUser(\''+u.id+\'")"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>';
+    if (!isSelf) html += '<button class="ibtn danger" onclick="deleteUser(\''+u.id+'\')"><svg viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>';
     html += '</div>';
   });
   html += '<p style="font-size:11px;color:var(--text3);padding:8px 15px 12px">Touchez l\'avatar pour changer la photo</p></div>';
