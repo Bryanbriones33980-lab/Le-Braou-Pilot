@@ -324,7 +324,14 @@ function load() {
     var t = localStorage.getItem('cp_tasks');
     var c = localStorage.getItem('cp_codes');
     var p = localStorage.getItem('cp_photos');
-    USERS  = u ? JSON.parse(u) : JSON.parse(JSON.stringify(DEFAULT_USERS));
+    var parsed = u ? JSON.parse(u) : null;
+    // Si les données contiennent l'ancien compte Alexandre, on repart de zéro
+    var hasOld = parsed && parsed.find(function(x){ return x.email==='admin@camping.fr'||x.nom==='Alexandre'; });
+    if (hasOld) {
+      localStorage.clear();
+      parsed = null; t = null; c = null; p = null;
+    }
+    USERS  = parsed || JSON.parse(JSON.stringify(DEFAULT_USERS));
     TASKS  = t ? JSON.parse(t) : { menage:[], technique:[] };
     CODES  = c ? JSON.parse(c) : JSON.parse(JSON.stringify(DEFAULT_CODES));
     if (p) {
@@ -332,6 +339,7 @@ function load() {
       USERS.forEach(function(u){ if(photos[u.id]) u.photo=photos[u.id]; });
     }
   } catch(e) {
+    localStorage.clear();
     USERS = JSON.parse(JSON.stringify(DEFAULT_USERS));
     TASKS = { menage:[], technique:[] };
     CODES = JSON.parse(JSON.stringify(DEFAULT_CODES));
