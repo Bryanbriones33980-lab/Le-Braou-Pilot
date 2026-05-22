@@ -6,11 +6,11 @@
 <title>Le Braou — Pilotage interne</title>
 <style>
 :root {
-  /* Palette Camping Le Braou — Bassin d'Arcachon */
-  --blue:      #1A6B9A;   /* bleu océan logo */
-  --blue-d:    #134F75;   /* bleu foncé */
-  --blue-l:    #D6EAF5;   /* bleu très clair */
-  --blue-m:    #5BA3C9;   /* bleu moyen */
+  /* Palette officielle Camping Le Braou */
+  --blue:      #24a8b4;   /* bleu Le Braou Canva */
+  --blue-d:    #1a7d87;   /* bleu foncé */
+  --blue-l:    #d4f1f4;   /* bleu très clair */
+  --blue-m:    #5fc4cc;   /* bleu moyen */
   --green:     #2E7D52;   /* vert pin */
   --green-d:   #1B5438;
   --green-l:   #D4EDE1;
@@ -18,7 +18,7 @@
   --sand-d:    #E8E0CC;
   --sand-dd:   #C8BCAA;
   --white:     #FFFFFF;
-  --text:      #1C2B35;   /* bleu nuit */
+  --text:      #1C2B35;
   --text2:     #4A6375;
   --text3:     #8AA3B2;
   --warn:      #D4760A;
@@ -28,8 +28,8 @@
   --danger-l:  #FDECEA;
   --danger-d:  #7B241C;
   --r: 10px; --rl: 16px; --rxl: 22px;
-  --sh: 0 1px 4px rgba(26,107,154,.10);
-  --shm: 0 4px 16px rgba(26,107,154,.14);
+  --sh: 0 1px 4px rgba(36,168,180,.10);
+  --shm: 0 4px 16px rgba(36,168,180,.18);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--sand);color:var(--text);font-size:15px;line-height:1.5}
@@ -42,7 +42,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 #login-screen{background:linear-gradient(160deg,var(--blue-d) 0%,var(--blue) 50%,var(--blue-m) 100%);align-items:center;justify-content:center;padding:20px;min-height:100vh;overflow-y:auto}
 .login-card{background:var(--white);border-radius:var(--rxl);padding:32px 28px;width:100%;max-width:400px;box-shadow:0 8px 32px rgba(0,0,0,.25);margin:auto}
 .login-logo{text-align:center;margin-bottom:22px}
-.login-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);border-radius:18px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 4px 12px rgba(26,107,154,.35)}
+.login-icon{width:60px;height:60px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);border-radius:18px;display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px;box-shadow:0 4px 12px rgba(36,168,180,.35)}
 .login-icon svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round}
 .login-logo h1{font-size:21px;font-weight:700;color:var(--text)}
 .login-logo p{font-size:13px;color:var(--text2);margin-top:2px}
@@ -54,8 +54,8 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .field input,.field select{width:100%;padding:11px 14px;border:1.5px solid var(--sand-d);border-radius:var(--r);font-family:inherit;font-size:14px;color:var(--text);background:var(--sand);outline:none;transition:border-color .15s}
 .field input:focus,.field select:focus{border-color:var(--blue);background:var(--white)}
 .field-hint{font-size:12px;color:var(--text3);margin-top:4px}
-.btn-main{width:100%;padding:13px;border:none;border-radius:var(--r);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);color:#fff;transition:all .15s;box-shadow:0 3px 10px rgba(26,107,154,.35)}
-.btn-main:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(26,107,154,.4)}
+.btn-main{width:100%;padding:13px;border:none;border-radius:var(--r);font-family:inherit;font-size:15px;font-weight:600;cursor:pointer;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);color:#fff;transition:all .15s;box-shadow:0 3px 10px rgba(36,168,180,.35)}
+.btn-main:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(36,168,180,.4)}
 .btn-main:active{transform:scale(.98)}
 .login-err{display:none;background:var(--danger-l);color:var(--danger-d);font-size:13px;padding:10px 14px;border-radius:8px;margin-bottom:13px;border:1px solid #F5C6C2}
 
@@ -90,7 +90,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 /* ── SEGMENT ── */
 .seg{display:flex;background:var(--white);border-radius:12px;padding:3px;gap:2px;margin-bottom:14px;border:1.5px solid var(--sand-d)}
 .seg-btn{flex:1;padding:9px;font-size:13px;font-weight:500;border:none;border-radius:10px;cursor:pointer;font-family:inherit;background:transparent;color:var(--text2);transition:all .15s}
-.seg-btn.active{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);color:#fff;font-weight:600;box-shadow:0 2px 6px rgba(26,107,154,.3)}
+.seg-btn.active{background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);color:#fff;font-weight:600;box-shadow:0 2px 6px rgba(36,168,180,.3)}
 
 /* ── ADD FORM ── */
 .add-card{background:var(--white);border:1.5px solid var(--blue-l);border-radius:var(--rl);padding:15px;margin-bottom:14px;box-shadow:var(--sh)}
@@ -101,14 +101,14 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .form-sel,.form-in{padding:9px 12px;border:1.5px solid var(--sand-d);border-radius:var(--r);font-family:inherit;font-size:13px;color:var(--text);background:var(--sand);outline:none;transition:border-color .15s}
 .form-sel:focus,.form-in:focus{border-color:var(--blue)}
 .form-in{flex:1;min-width:100px}
-.btn-add{padding:9px 18px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);color:#fff;border:none;border-radius:var(--r);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;box-shadow:0 2px 6px rgba(26,107,154,.3)}
+.btn-add{padding:9px 18px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);color:#fff;border:none;border-radius:var(--r);font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s;box-shadow:0 2px 6px rgba(36,168,180,.3)}
 .btn-add:hover{transform:translateY(-1px)}
 .btn-add:active{transform:scale(.97)}
 
 /* ── FILTERS ── */
 .filters{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:13px}
 .fchip{padding:6px 13px;border-radius:20px;border:1.5px solid var(--sand-d);background:var(--white);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s}
-.fchip.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 2px 6px rgba(26,107,154,.3)}
+.fchip.active{background:var(--blue);color:#fff;border-color:var(--blue);box-shadow:0 2px 6px rgba(36,168,180,.3)}
 .cbadge{display:inline-flex;align-items:center;justify-content:center;min-width:17px;height:17px;border-radius:9px;font-size:11px;font-weight:700;padding:0 4px;margin-left:4px;background:var(--danger-l);color:var(--danger)}
 
 /* ── TASK CARDS ── */
@@ -173,7 +173,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .user-row:hover{background:var(--sand)}
 .uav{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--blue-l),var(--blue-m));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:var(--blue-d);flex-shrink:0;overflow:hidden;position:relative;cursor:pointer;border:2px solid var(--blue-l)}
 .uav img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.uav-ov{position:absolute;inset:0;background:rgba(26,107,154,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
+.uav-ov{position:absolute;inset:0;background:rgba(36,168,180,.6);border-radius:50%;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity .15s}
 .uav:hover .uav-ov{opacity:1}
 .uav-ov svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2}
 .user-info{flex:1;min-width:0}
@@ -181,7 +181,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .user-email{font-size:12px;color:var(--text3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .role-sel{padding:6px 9px;border:1.5px solid var(--sand-d);border-radius:8px;font-family:inherit;font-size:12px;color:var(--text);background:var(--sand);cursor:pointer;outline:none;font-weight:500}
 .role-sel:focus{border-color:var(--blue)}
-.btn-ok{padding:7px 13px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);color:#fff;border:none;border-radius:8px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:600;box-shadow:0 2px 5px rgba(26,107,154,.3)}
+.btn-ok{padding:7px 13px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);color:#fff;border:none;border-radius:8px;font-size:12px;font-family:inherit;cursor:pointer;font-weight:600;box-shadow:0 2px 5px rgba(36,168,180,.3)}
 .code-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1.5px solid var(--sand)}
 .code-row:last-child{border-bottom:none}
 .code-lbl{flex:1;font-size:14px;font-weight:500;color:var(--text)}
@@ -202,7 +202,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .edit-row{display:flex;gap:8px;align-items:center}
 
 /* ── TOAST ── */
-#toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%) translateY(16px);background:linear-gradient(135deg,var(--blue-d),var(--blue));color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:600;opacity:0;transition:all .22s;pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:0 4px 12px rgba(26,107,154,.4)}
+#toast{position:fixed;bottom:78px;left:50%;transform:translateX(-50%) translateY(16px);background:linear-gradient(135deg,var(--blue-d),var(--blue));color:#fff;padding:10px 20px;border-radius:24px;font-size:13px;font-weight:600;opacity:0;transition:all .22s;pointer-events:none;z-index:9999;white-space:nowrap;box-shadow:0 4px 12px rgba(36,168,180,.4)}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 /* ── MODAL ── */
@@ -225,8 +225,9 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 <div id="login-screen" class="screen active">
   <div class="login-card">
     <div class="login-logo">
-      <div class="login-icon">
-        <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
+      <img src="https://www.campingaudenge.com/wp-content/uploads/2022/04/cropped-LOGO_BLANC_FD_BLEU_72DPI-1.png" alt="Camping Le Braou" style="width:140px;height:auto;margin-bottom:10px" onerror="this.style.display='none';document.getElementById('logo-fallback').style.display='flex'"/>
+      <div id="logo-fallback" style="display:none;width:64px;height:64px;background:linear-gradient(135deg,var(--blue) 0%,var(--blue-d) 100%);border-radius:18px;align-items:center;justify-content:center;margin:0 auto 10px;box-shadow:0 4px 12px rgba(36,168,180,.35)">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>
       </div>
       <h1>Camping Le Braou</h1>
       <p>Espace de pilotage interne</p>
@@ -268,8 +269,11 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 <div id="main-screen" class="screen">
   <div class="topbar">
     <div class="topbar-logo">
-      <div class="topbar-logo-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
-      Le Braou
+      <img src="https://www.campingaudenge.com/wp-content/uploads/2022/04/logo-minimaliste-blanc-camping-du-braou.png" alt="Le Braou" style="height:30px;width:auto" onerror="this.style.display='none';document.getElementById('tb-logo-txt').style.display='flex'"/>
+      <span id="tb-logo-txt" style="display:none;align-items:center;gap:7px">
+        <div class="topbar-logo-icon"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg></div>
+        Le Braou
+      </span>
     </div>
     <span id="tb-badge" class="role-badge"></span>
     <span id="tb-name" class="topbar-name"></span>
