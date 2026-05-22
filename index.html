@@ -197,16 +197,14 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* ── MODAL CONFIRM ── */
-#modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 10000; align-items: center; justify-content: center; padding: 24px; }
-#modal-overlay.show { display: flex; }
-.modal-box { background: var(--surface); border-radius: var(--radius-lg); padding: 24px; max-width: 340px; width: 100%; box-shadow: var(--shadow-md); }
-.modal-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
-.modal-msg { font-size: 14px; color: var(--text2); line-height: 1.5; margin-bottom: 20px; }
+#modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 10000; }
+#modal-overlay.show { display: block; }
+.modal-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: var(--surface); border-radius: var(--radius-lg); padding: 24px; width: 300px; max-width: 90vw; }
+.modal-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; color: var(--text); }
+.modal-msg { font-size: 14px; color: var(--text2); line-height: 1.5; margin-bottom: 20px; word-break: break-word; }
 .modal-btns { display: flex; gap: 8px; }
-.modal-btn-cancel { flex: 1; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); font-family: inherit; font-size: 14px; cursor: pointer; color: var(--text2); }
-.modal-btn-cancel:hover { background: var(--surface2); }
-.modal-btn-confirm { flex: 1; padding: 10px; border: none; border-radius: var(--radius); background: var(--danger); color: #fff; font-family: inherit; font-size: 14px; font-weight: 500; cursor: pointer; }
-.modal-btn-confirm:hover { background: var(--danger-text); }
+.modal-btn-cancel { flex: 1; padding: 11px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); font-family: inherit; font-size: 14px; cursor: pointer; color: var(--text2); }
+.modal-btn-confirm { flex: 1; padding: 11px; border: none; border-radius: var(--radius); background: var(--danger); color: #fff; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
 
 /* ── LOADING ── */
 .loading { text-align: center; padding: 40px; color: var(--text3); font-size: 13px; }
@@ -271,12 +269,12 @@ html, body { height: 100%; font-family: -apple-system, BlinkMacSystemFont, 'Sego
 <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="handlePhotoUpload(event)"/>
 
 <div id="modal-overlay">
-  <div class="modal-box">
+  <div class="modal-center">
     <div class="modal-title" id="modal-title">Confirmer</div>
     <div class="modal-msg" id="modal-msg"></div>
     <div class="modal-btns">
       <button class="modal-btn-cancel" onclick="modalCancel()">Annuler</button>
-      <button class="modal-btn-confirm" id="modal-confirm-btn" onclick="modalConfirm()">Supprimer</button>
+      <button class="modal-btn-confirm" onclick="modalConfirm()">Supprimer</button>
     </div>
   </div>
 </div>
@@ -319,17 +317,36 @@ let demoTasks = {
 // Charge depuis localStorage si disponible
 function loadData() {
   try {
-    const u = localStorage.getItem('cp_users');
-    const t = localStorage.getItem('cp_tasks');
+    var u = localStorage.getItem('cp_users');
+    var t = localStorage.getItem('cp_tasks');
+    var p = localStorage.getItem('cp_photos');
     if (u) DEMO_USERS = JSON.parse(u);
     if (t) demoTasks  = JSON.parse(t);
+    // Réappliquer les photos séparément
+    if (p) {
+      var photos = JSON.parse(p);
+      DEMO_USERS.forEach(function(user) {
+        if (photos[user.id]) user.photo = photos[user.id];
+      });
+    }
   } catch(e) {}
 }
 
 function saveData() {
+  // Sauvegarder tâches
+  try { localStorage.setItem('cp_tasks', JSON.stringify(demoTasks)); } catch(e) {}
+  // Sauvegarder users sans photos
   try {
-    localStorage.setItem('cp_users', JSON.stringify(DEMO_USERS));
-    localStorage.setItem('cp_tasks', JSON.stringify(demoTasks));
+    var usersLight = DEMO_USERS.map(function(u) {
+      return { id:u.id, email:u.email, nom:u.nom, role:u.role, password:u.password, photo:null };
+    });
+    localStorage.setItem('cp_users', JSON.stringify(usersLight));
+  } catch(e) {}
+  // Sauvegarder photos séparément
+  try {
+    var photos = {};
+    DEMO_USERS.forEach(function(u) { if (u.photo) photos[u.id] = u.photo; });
+    localStorage.setItem('cp_photos', JSON.stringify(photos));
   } catch(e) {}
 }
 
@@ -681,11 +698,11 @@ function deleteTask(id) {
   const t = findTask(id);
   if (!t) return;
   showModal(
-    'Supprimer la tâche ?',
-    `"${t.texte.slice(0, 70)}${t.texte.length > 70 ? '…' : ''}"`,
-    () => {
-      demoTasks.menage    = demoTasks.menage.filter(x => x.id !== id);
-      demoTasks.technique = demoTasks.technique.filter(x => x.id !== id);
+    'Supprimer cette tâche ?',
+    t.texte.slice(0, 80) + (t.texte.length > 80 ? '…' : ''),
+    function() {
+      demoTasks.menage    = demoTasks.menage.filter(function(x){ return x.id !== id; });
+      demoTasks.technique = demoTasks.technique.filter(function(x){ return x.id !== id; });
       saveData();
       toast('Tâche supprimée');
       renderPage();
@@ -728,17 +745,19 @@ function saveRole(uid) {
 }
 
 function deleteUser(uid) {
-  const user = DEMO_USERS.find(u => u.id === uid);
+  var user = DEMO_USERS.find(function(u){ return u.id === uid; });
   if (!user) return;
   if (user.id === currentUser.id) { toast('Impossible de se supprimer soi-même'); return; }
+  var nom = user.nom;
+  var email = user.email;
   showModal(
-    `Supprimer ${user.nom} ?`,
-    `Le compte de ${user.nom} (${user.email}) sera définitivement supprimé.`,
-    () => {
-      const idx = DEMO_USERS.findIndex(u => u.id === uid);
+    'Supprimer ' + nom + ' ?',
+    'Le compte de ' + nom + ' (' + email + ') sera supprimé.',
+    function() {
+      var idx = DEMO_USERS.findIndex(function(u){ return u.id === uid; });
       if (idx !== -1) DEMO_USERS.splice(idx, 1);
       saveData();
-      toast(`Compte de ${user.nom} supprimé`);
+      toast('Compte de ' + nom + ' supprimé');
       renderPage();
     }
   );
@@ -765,19 +784,34 @@ function triggerPhotoUpload(uid) {
 }
 
 function handlePhotoUpload(event) {
-  const file = event.target.files[0];
+  var file = event.target.files[0];
   if (!file) return;
-  if (file.size > 5 * 1024 * 1024) { toast('Photo trop lourde (max 5 Mo)'); return; }
-  const reader = new FileReader();
-  reader.onload = (e) => {
-    const user = DEMO_USERS.find(u => u.id === photoTargetUserId);
-    if (user) {
-      user.photo = e.target.result;
-      if (currentUser.id === user.id) currentUser.photo = e.target.result;
-      saveData();
-      toast('Photo mise à jour ✓');
-      renderPage();
-    }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var img = new Image();
+    img.onload = function() {
+      // Redimensionner à max 80x80px pour garder le fichier léger
+      var canvas = document.createElement('canvas');
+      var size = 80;
+      canvas.width = size;
+      canvas.height = size;
+      var ctx = canvas.getContext('2d');
+      // Crop carré centré
+      var s = Math.min(img.width, img.height);
+      var ox = (img.width - s) / 2;
+      var oy = (img.height - s) / 2;
+      ctx.drawImage(img, ox, oy, s, s, 0, 0, size, size);
+      var dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+      var user = DEMO_USERS.find(function(u){ return u.id === photoTargetUserId; });
+      if (user) {
+        user.photo = dataUrl;
+        if (currentUser.id === user.id) currentUser.photo = dataUrl;
+        try { saveData(); } catch(err) {}
+        toast('Photo mise à jour ✓');
+        renderPage();
+      }
+    };
+    img.src = e.target.result;
   };
   reader.readAsDataURL(file);
 }
@@ -805,25 +839,27 @@ function formatDur(ms) {
 }
 
 // ════════════════════════════════════════════════
-//  MODAL CONFIRM (remplace confirm() bloqué par Replit)
+//  MODAL CONFIRM
 // ════════════════════════════════════════════════
-let modalCallback = null;
+let _modalCb = null;
 
 function showModal(title, msg, onConfirm) {
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-msg').textContent = msg;
-  modalCallback = onConfirm;
+  _modalCb = onConfirm;
   document.getElementById('modal-overlay').classList.add('show');
 }
 
 function modalConfirm() {
   document.getElementById('modal-overlay').classList.remove('show');
-  if (modalCallback) { modalCallback(); modalCallback = null; }
+  const cb = _modalCb;
+  _modalCb = null;
+  if (cb) cb();
 }
 
 function modalCancel() {
   document.getElementById('modal-overlay').classList.remove('show');
-  modalCallback = null;
+  _modalCb = null;
 }
 
 
