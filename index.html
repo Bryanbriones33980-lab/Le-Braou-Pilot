@@ -256,7 +256,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
   width:220px;
   max-width:60vw;
   filter:drop-shadow(0 8px 24px rgba(0,0,0,.35));
-  mix-blend-mode:multiply;
   animation:none;
 }
 #bravo-overlay.show #bravo-dog {
@@ -643,11 +642,8 @@ function renderTask(t,canDel){
   h+='<span class="task-agent">'+(agentAv?agentAv+' ':'')+(isPole?'👥 ':'')+agentName+'</span>';
   h+='<span class="task-time">'+ago+dur+'</span>';
   // Bouton "Prendre" si pôle et pas assigné à quelqu'un et pas done
-  // Bouton "Annuler" si la tâche a été prise par cet agent et n'est pas terminée
   if(isPole&&!t.done){
     h+='<button class="btn-prendre" onclick="prendreTask(\''+t.id+'\')">Prendre</button>';
-  } else if(!isPole&&t.agent_id===currentUser.id&&!t.done&&t._wasPole){
-    h+='<button class="btn-prendre" style="background:var(--warn-l);color:var(--warn-d);border-color:var(--warn)" onclick="relacherTask(\''+t.id+'\')">Annuler</button>';
   }
   h+='</div>'+noteHtml+'</div>';
   h+='<div class="task-actions">';
@@ -793,27 +789,8 @@ function deleteTask(id){
 }
 function prendreTask(id){
   var t=findTask(id);if(!t)return;
-  t._wasPole=true;  // mémorise que la tâche venait d'un pôle
   t.agent_id=currentUser.id;t.agent_name=currentUser.nom;
   save();toast('Tâche prise en charge ✓');render();
-}
-function relacherTask(id){
-  var t=findTask(id);if(!t)return;
-  var mod=t._module||currentModule;
-  // Remettre le pôle d'origine
-  var roleToMod={menage:'pole_menage',technique:'pole_technique',accueil:'pole_accueil'};
-  t.agent_id=roleToMod[mod]||'pole_'+mod;
-  t.agent_name=null;
-  save();toast('Tâche remise dans le pool 🔄');render();
-}
-function showBravoDog(){
-  var overlay=document.getElementById('bravo-overlay');
-  if(!overlay)return;
-  overlay.classList.remove('show');
-  // force reflow
-  void overlay.offsetWidth;
-  overlay.classList.add('show');
-  setTimeout(function(){overlay.classList.remove('show');},3000);
 }
 function toggleNote(id){
   noteOpen[id]=!noteOpen[id];render();
