@@ -343,6 +343,15 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .toggle-wrap input:checked+.toggle-lbl{background:var(--primary);}
 .toggle-lbl::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.2);}
 .toggle-wrap input:checked+.toggle-lbl::after{left:23px;}
+:root{--ok:var(--green);--primary:var(--blue)}
+.pilot-grid{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.task-data{display:flex;gap:5px;flex-wrap:wrap;margin:5px 0 2px}
+.data-badge{font-size:10px;font-weight:800;padding:3px 7px;border-radius:99px;background:var(--blue-l);color:var(--blue-d);letter-spacing:.01em}
+.data-badge.house{background:var(--green-l);color:var(--green-d)}.data-badge.num{background:var(--purple-l);color:var(--purple)}
+.muted{font-size:12px;color:var(--text2);opacity:.75}.kpi-line{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--sand-d);font-size:13px}.kpi-line:last-child{border-bottom:0}
+.client-link{background:var(--sand);border:1.5px dashed var(--blue);border-radius:12px;padding:10px;font-size:12px;word-break:break-all;margin-bottom:8px;color:var(--blue-d);font-weight:700}.nav-ico-text{height:21px;display:flex;align-items:center;font-weight:800;font-size:13px}.client-public{min-height:100vh;background:linear-gradient(160deg,var(--blue-d),var(--green));display:flex;align-items:center;justify-content:center;padding:18px}.client-box{background:#fff;border-radius:22px;max-width:460px;width:100%;padding:22px;box-shadow:0 20px 50px rgba(0,0,0,.2)}.client-box h1{font-size:24px;margin-bottom:6px;color:var(--blue-d)}.client-box p{font-size:13px;color:var(--text2);margin-bottom:16px}.client-box input,.client-box textarea{width:100%;border:1.5px solid var(--sand-d);background:var(--sand);border-radius:12px;padding:12px;margin-bottom:10px;font:inherit}.client-box button{width:100%;border:0;border-radius:13px;padding:13px;background:var(--blue);color:#fff;font-weight:800;font:inherit}.client-box #cp-ok{margin-top:12px;color:var(--green-d);font-weight:700;font-size:13px}
+@media(max-width:560px){.pilot-grid{grid-template-columns:1fr}.topbar-name{max-width:90px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}}
+
 </style>
 </head>
 <body>
@@ -1122,6 +1131,179 @@ function timeAgo(ts){var d=Date.now()-ts;if(d<60000)return 'à l\'instant';if(d<
 function formatDur(ms){if(ms<60000)return '< 1 min';if(ms<3600000)return Math.round(ms/60000)+' min';if(ms<86400000)return (ms/3600000).toFixed(1)+'h';return Math.round(ms/86400000)+'j';}
 var _tt;
 function toast(msg){var el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(function(){el.classList.remove('show');},2200);}
+</script>
+<script>
+(function(){
+'use strict';
+var HOUSING_TYPES=['Mobile-home','Coco Sweet','Bungalow toilé','Chalet','Lodge sur pilotis'];
+var TASK_PRESETS={
+  menage:[
+    {k:'clean_rental',label:'Nettoyer locatif',defaultText:'Nettoyer locatif'},
+    {k:'check_inventory',label:'Contrôle inventaire',defaultText:'Contrôler inventaire locatif'},
+    {k:'linen',label:'Draps / linge',defaultText:'Préparer le linge du locatif'},
+    {k:'terrace',label:'Terrasse / extérieur',defaultText:'Nettoyer terrasse et extérieur'}
+  ],
+  technique:[
+    {k:'intervention',label:'Intervention technique',defaultText:'Intervention technique'},
+    {k:'electricity',label:'Électricité',defaultText:'Vérifier électricité'},
+    {k:'plumbing',label:'Plomberie',defaultText:'Intervention plomberie'},
+    {k:'equipment',label:'Équipement cassé',defaultText:'Remplacer ou réparer équipement'}
+  ],
+  accueil:[
+    {k:'key_delivery',label:'Attribution logement / clés',defaultText:'Attribuer logement au client'},
+    {k:'client_request',label:'Demande client',defaultText:'Traiter demande client'},
+    {k:'arrival',label:'Arrivée client',defaultText:'Préparer arrivée client'},
+    {k:'departure',label:'Départ client',defaultText:'Traiter départ client'}
+  ]
+};
+var CLIENT_REPORTS=[],APP_SETTINGS={dog:true,taskSound:true,dense:false},REPORT_ARCHIVE=[];
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function loadExtra(){
+  try{CLIENT_REPORTS=JSON.parse(localStorage.getItem('cp_client_reports')||'[]');}catch(e){CLIENT_REPORTS=[];}
+  try{APP_SETTINGS=Object.assign(APP_SETTINGS,JSON.parse(localStorage.getItem('cp_app_settings')||'{}'));}catch(e){}
+  try{REPORT_ARCHIVE=JSON.parse(localStorage.getItem('cp_reports_archive')||'[]');}catch(e){REPORT_ARCHIVE=[];}
+  if(typeof NOTIF_SOUND_ENABLED!=='undefined') APP_SETTINGS.taskSound=NOTIF_SOUND_ENABLED;
+}
+function saveExtra(){
+  localStorage.setItem('cp_client_reports',JSON.stringify(CLIENT_REPORTS));
+  localStorage.setItem('cp_app_settings',JSON.stringify(APP_SETTINGS));
+  localStorage.setItem('cp_reports_archive',JSON.stringify(REPORT_ARCHIVE));
+}
+var _baseSave=window.save;
+window.save=function(){ if(_baseSave)_baseSave(); saveExtra(); };
+function presetOptions(mod){return (TASK_PRESETS[mod]||[]).map(function(p){return '<option value="'+p.k+'">'+esc(p.label)+'</option>';}).join('');}
+function housingOptions(sel){return '<option value="">Type de logement…</option>'+HOUSING_TYPES.map(function(h){return '<option '+(sel===h?'selected':'')+' value="'+esc(h)+'">'+esc(h)+'</option>';}).join('');}
+function findPreset(mod,k){return (TASK_PRESETS[mod]||[]).find(function(p){return p.k===k;});}
+window.fillTaskPreset=function(){
+  var sel=document.getElementById('preset-sel'),txt=document.getElementById('task-input');
+  if(!sel||!txt)return;
+  var p=findPreset(currentModule,sel.value);
+  if(p && !txt.value.trim()) txt.value=p.defaultText;
+};
+var _oldRenderTasks=window.renderTasks;
+window.renderTasks=function(){
+  var role=currentUser.role;
+  var canAdd=role==='admin'||role==='responsable';
+  var canDel=role==='admin'||role==='responsable';
+  var all=TASKS[currentModule];
+  var urg=countUrgent();
+  var h='';
+  if(urg>0) h+='<div class="urgent-banner"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'+urg+' tâche(s) très urgente(s) en attente</div>';
+  h+='<div class="page-hd"><div><div class="page-title">Tâches</div><div class="page-sub">'+all.filter(function(t){return!t.done;}).length+' en cours — '+currentModule+'</div></div></div>';
+  h+='<div class="mod-tabs">';
+  [{k:'menage',l:'🧹 Ménage'},{k:'technique',l:'🔧 Technique'},{k:'accueil',l:'🛎 Accueil'}].forEach(function(m){
+    var u=TASKS[m.k].filter(function(t){return t.priorite==='urgent'&&!t.done;}).length;
+    h+='<button class="mod-tab '+(currentModule===m.k?'active':'')+'" onclick="switchMod(\''+m.k+'\')">'+m.l+(u>0?' <span class="cbadge">'+u+'</span>':'')+'</button>';
+  });
+  h+='</div>';
+  if(canAdd){
+    h+='<div class="add-card"><div class="add-card-title">+ Nouvelle tâche</div>';
+    h+='<div class="pilot-grid"><select class="form-sel" id="preset-sel" onchange="fillTaskPreset()"><option value="manual">Saisie libre</option>'+presetOptions(currentModule)+'</select><select class="form-sel" id="housing-type">'+housingOptions('')+'</select><input class="form-sel" id="housing-num" placeholder="N° logement / emplacement" style="min-width:0"/></div>';
+    h+='<textarea class="form-area" id="task-input" rows="2" placeholder="Décrire la tâche…"></textarea>';
+    h+='<div class="form-row"><select class="form-sel" id="prio-sel"><option value="normal">🟢 Normal</option><option value="high">🟠 Urgent</option><option value="urgent">🔴 Très urgent</option></select><select class="form-sel" id="agent-sel">'+buildAgentOptions('pole_'+currentModule)+'</select></div>';
+    h+='<div class="recur-row"><input type="checkbox" id="recur-cb"/><label for="recur-cb">Tâche récurrente</label></div>';
+    h+='<div class="form-row" style="margin-top:8px"><button class="btn-add" onclick="addTask()">Ajouter</button></div></div>';
+  }
+  var counts={urgent:all.filter(function(t){return t.priorite==='urgent'&&!t.done;}).length,done:all.filter(function(t){return t.done;}).length};
+  h+='<div class="filters"><div class="fchip '+(currentFilter==='todo'?'active':'')+'" onclick="setFilter(\'todo\')">En cours</div><div class="fchip '+(currentFilter==='mine'?'active':'')+'" onclick="setFilter(\'mine\')">Mes tâches</div><div class="fchip '+(currentFilter==='urgent'?'active':'')+'" onclick="setFilter(\'urgent\')">Très urgent'+(counts.urgent?'<span class="cbadge">'+counts.urgent+'</span>':'')+'</div><div class="fchip '+(currentFilter==='recur'?'active':'')+'" onclick="setFilter(\'recur\')">Récurrentes</div><div class="fchip '+(currentFilter==='done'?'active':'')+'" onclick="setFilter(\'done\')">Terminées'+(counts.done?'<span class="cbadge" style="background:var(--sand-d);color:var(--text2)">'+counts.done+'</span>':'')+'</div></div>';
+  var filtered=getFiltered(); h+='<div class="tasks">';
+  if(!filtered.length) h+='<div class="empty"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="13" y2="13"/></svg><p>Aucune tâche ici</p></div>';
+  else filtered.forEach(function(t){h+=renderTask(t,canDel);});
+  h+='</div>'; return h;
+};
+window.addTask=function(){
+  var txt=document.getElementById('task-input').value.trim();
+  var prio=document.getElementById('prio-sel').value;
+  var aid=document.getElementById('agent-sel').value;
+  var recur=document.getElementById('recur-cb').checked;
+  var preset=document.getElementById('preset-sel')?document.getElementById('preset-sel').value:'manual';
+  var p=findPreset(currentModule,preset);
+  var htype=document.getElementById('housing-type')?document.getElementById('housing-type').value:'';
+  var hnum=document.getElementById('housing-num')?document.getElementById('housing-num').value.trim():'';
+  if(!txt && p) txt=p.defaultText;
+  if(!txt){toast('Décrivez la tâche');return;}
+  if(htype||hnum){ txt=txt+' — '+[htype,hnum?('n° '+hnum):''].filter(Boolean).join(' '); }
+  if(prio==='urgent') playUrgentSound();
+  TASKS[currentModule].unshift({id:'t'+Date.now(),texte:txt,priorite:prio,agent_id:aid,done:false,note:'',recur:recur,created_at:Date.now(),done_at:null,comments:[],preset_key:preset,preset_label:p?p.label:'Saisie libre',housing_type:htype,housing_num:hnum});
+  save();toast('Tâche ajoutée ✓');render();
+};
+var _oldRenderTask=window.renderTask;
+window.renderTask=function(t,canDel){
+  var html=_oldRenderTask(t,canDel);
+  var badges='';
+  if(t.preset_label&&t.preset_label!=='Saisie libre') badges+='<span class="data-badge">'+esc(t.preset_label)+'</span>';
+  if(t.housing_type) badges+='<span class="data-badge house">'+esc(t.housing_type)+'</span>';
+  if(t.housing_num) badges+='<span class="data-badge num">N° '+esc(t.housing_num)+'</span>';
+  if(!badges)return html;
+  return html.replace('<div class="task-meta">','<div class="task-data">'+badges+'</div><div class="task-meta">');
+};
+function allTasks(){return TASKS.menage.concat(TASKS.technique).concat(TASKS.accueil);}
+function avgMs(arr){var a=arr.filter(function(t){return t.done&&t.done_at;});return a.length?a.reduce(function(s,t){return s+(t.done_at-t.created_at);},0)/a.length:0;}
+function group(tasks,key){var o={};tasks.forEach(function(t){var k=t[key]||'Non renseigné';o[k]=(o[k]||0)+1;});return o;}
+function barsFromMap(map,total){var keys=Object.keys(map).sort(function(a,b){return map[b]-map[a];});if(!keys.length)return '<p class="muted">Aucune donnée</p>';var max=Math.max.apply(null,keys.map(function(k){return map[k];}).concat([1]));return keys.map(function(k){var w=Math.round(map[k]/max*100);var pct=total?Math.round(map[k]/total*100):0;return '<div class="bar-row"><div class="bar-name">'+esc(k)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+w+'%">'+(w>22?pct+'%':'')+'</div></div><div class="bar-count">'+map[k]+'</div></div>';}).join('');}
+window.renderStats=function(){
+  var all=allTasks(),done=all.filter(function(x){return x.done;}),wt=done.filter(function(x){return x.done_at;});
+  var avg=avgMs(all),open=all.length-done.length;
+  var h='<div class="page-hd"><div><div class="page-title">📊 Suivi & pilotage</div><div class="page-sub">Ratios, logements, délais, attribution</div></div><button class="btn-sm" onclick="navigateTo(\'rapports\')">Rapports</button></div>';
+  h+='<div class="stats-grid"><div class="stat-card"><div class="stat-lbl">Total tâches</div><div class="stat-val">'+all.length+'</div></div><div class="stat-card"><div class="stat-lbl">Terminées</div><div class="stat-val">'+done.length+'</div><div class="stat-sub">'+(all.length?Math.round(done.length/all.length*100):0)+'%</div></div><div class="stat-card"><div class="stat-lbl">En cours</div><div class="stat-val">'+open+'</div></div><div class="stat-card"><div class="stat-lbl">Délai moyen</div><div class="stat-val" style="font-size:18px">'+(avg?formatDur(avg):'—')+'</div></div></div>';
+  var byHousing=group(all.filter(function(t){return t.housing_type;}),'housing_type');
+  h+='<div class="chart-card"><div class="chart-title">Logements les plus attribués</div>'+barsFromMap(byHousing,all.length)+'</div>';
+  h+='<div class="chart-card"><div class="chart-title">Temps moyen de nettoyage par logement</div>';
+  HOUSING_TYPES.forEach(function(type){var arr=all.filter(function(t){return t.housing_type===type && (t.preset_key==='clean_rental'||/nettoy/i.test(t.texte));});var a=avgMs(arr);h+='<div class="kpi-line"><span>'+esc(type)+'</span><b>'+(a?formatDur(a):'—')+'</b></div>';});
+  h+='</div>';
+  var nums=group(all.filter(function(t){return t.housing_num;}),'housing_num');
+  h+='<div class="chart-card"><div class="chart-title">Numéros les plus donnés / cités</div>'+barsFromMap(nums,all.length)+'</div>';
+  var accNums=group(TASKS.accueil.filter(function(t){return t.housing_num;}),'housing_num');
+  h+='<div class="chart-card"><div class="chart-title">Pôle accueil — numéros les plus attribués</div>'+barsFromMap(accNums,TASKS.accueil.length)+'</div>';
+  var presetMap=group(all.filter(function(t){return t.preset_label;}),'preset_label');
+  h+='<div class="chart-card"><div class="chart-title">Catégories de tâches</div>'+barsFromMap(presetMap,all.length)+'</div>';
+  var agentMap={}; all.forEach(function(t){var k=t.agent_id||'?';var n=getAgentLabel(t);if(!agentMap[k])agentMap[k]={nom:n,done:0,total:0};agentMap[k].total++;if(t.done)agentMap[k].done++;});
+  var agents=Object.values(agentMap).sort(function(a,b){return b.total-a.total;});
+  h+='<div class="chart-card"><div class="chart-title">Charge par agent / pôle</div>'+(agents.length?agents.map(function(a){var pct=a.total?Math.round(a.done/a.total*100):0;return '<div class="bar-row"><div class="bar-name">'+esc(a.nom)+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%">'+(pct>18?pct+'%':'')+'</div></div><div class="bar-count">'+a.done+'/'+a.total+'</div></div>';}).join(''):'<p class="muted">Aucune donnée</p>')+'</div>';
+  return h;
+};
+var _baseRenderProfil=window.renderProfil;
+window.renderProfil=function(){
+  var u=currentUser,lbl={admin:'Admin',responsable:'Responsable',menage:'Ménage',technique:'Technique',accueil:'Accueil'};
+  var h=_baseRenderProfil();
+  h=h.replace('</div></div>','<div class="field"><label>Nouveau mot de passe</label><div class="edit-row"><input class="form-in" id="edit-pass" type="password" placeholder="Laisser vide si inchangé" style="background:var(--sand);border:1.5px solid var(--sand-d)"/><button class="btn-ok" onclick="savePassword()">OK</button></div></div><div class="field notif-field"><label>Chien de félicitations</label><div class="toggle-wrap"><input type="checkbox" id="dog-toggle" '+(APP_SETTINGS.dog?'checked':'')+' onchange="toggleDog(this)"/><label class="toggle-lbl" for="dog-toggle"></label></div></div></div></div>');
+  return h;
+};
+window.savePassword=function(){var el=document.getElementById('edit-pass');if(!el||!el.value){toast('Aucun changement');return;}if(el.value.length<6){toast('6 caractères minimum');return;}currentUser.password=el.value;var u=USERS.find(function(x){return x.id===currentUser.id;});if(u)u.password=el.value;save();toast('Mot de passe mis à jour ✓');render();};
+window.toggleDog=function(cb){APP_SETTINGS.dog=cb.checked;saveExtra();toast(APP_SETTINGS.dog?'Chien activé':'Chien masqué');};
+var _oldDog=window.showBravoDog;
+window.showBravoDog=function(){ if(APP_SETTINGS.dog!==false && _oldDog) _oldDog(); };
+var _oldToggleNotif=window.toggleNotif;
+window.toggleNotif=function(cb){NOTIF_SOUND_ENABLED=cb.checked;APP_SETTINGS.taskSound=cb.checked;saveNotifPref();saveExtra();toast(cb.checked?'Son activé':'Son désactivé');render();};
+window.renderClients=function(){
+  var h='<div class="page-hd"><div><div class="page-title">Demandes clients</div><div class="page-sub">Lien public sans compte pour QR code</div></div><button class="btn-sm" onclick="copyClientLink()">Copier lien</button></div>';
+  h+='<div class="admin-sec"><div class="admin-sec-hd">Lien QR client</div><div style="padding:12px 14px"><div class="client-link">'+esc(location.href.split('#')[0]+'#client')+'</div><div class="muted">Générez votre QR code avec ce lien. Le client peut écrire un problème sans créer de compte.</div></div></div>';
+  h+='<div class="tasks">';
+  var open=CLIENT_REPORTS.filter(function(r){return r.status==='open';}).sort(function(a,b){return b.ts-a.ts;});
+  if(!open.length) h+='<div class="empty"><p>Aucune demande client ouverte</p></div>';
+  open.forEach(function(r){h+='<div class="task-card"><div class="task-top"><div class="task-body"><div class="task-txt">'+esc(r.text)+'</div><div class="task-data">'+(r.place?'<span class="data-badge num">'+esc(r.place)+'</span>':'')+'<span class="data-badge">Client</span></div><div class="task-meta"><span class="task-time">'+timeAgo(r.ts)+'</span></div><textarea class="form-area" id="client-edit-'+r.id+'" rows="2">'+esc(r.text)+'</textarea><div class="form-row"><select class="form-sel" id="client-mod-'+r.id+'"><option value="menage">Ménage</option><option value="technique">Technique</option><option value="accueil">Accueil</option></select><select class="form-sel" id="client-agent-'+r.id+'">'+buildAgentOptions('pole_technique')+'</select></div><div class="form-row"><button class="btn-add" onclick="clientToTask(\''+r.id+'\')">Transformer en tâche</button><button class="btn-sm" onclick="deleteClientReport(\''+r.id+'\')">Supprimer</button></div></div></div></div>';});
+  h+='</div>'; return h;
+};
+window.copyClientLink=function(){var link=location.href.split('#')[0]+'#client';navigator.clipboard&&navigator.clipboard.writeText(link);toast('Lien copié');};
+window.clientToTask=function(id){var r=CLIENT_REPORTS.find(function(x){return x.id===id;});if(!r)return;var txt=document.getElementById('client-edit-'+id).value.trim()||r.text;var mod=document.getElementById('client-mod-'+id).value;var aid=document.getElementById('client-agent-'+id).value;TASKS[mod].unshift({id:'t'+Date.now(),texte:txt,priorite:'high',agent_id:aid,done:false,note:'',recur:false,created_at:Date.now(),done_at:null,comments:[{id:'c'+Date.now(),author:'Signalement client',text:'Demande reçue depuis QR code'+(r.place?' — '+r.place:''),ts:r.ts,replies:[]}],preset_key:'client_report',preset_label:'Signalement client',housing_num:r.place||''});r.status='converted';save();toast('Transformé en tâche ✓');render();};
+window.deleteClientReport=function(id){CLIENT_REPORTS=CLIENT_REPORTS.filter(function(x){return x.id!==id;});saveExtra();toast('Demande supprimée');render();};
+window.renderRapports=function(){var h='<div class="page-hd"><div><div class="page-title">Rapports PDF</div><div class="page-sub">Export journalier, hebdo, mensuel</div></div></div><div class="admin-sec"><div class="admin-sec-hd">Générer un rapport</div><div style="padding:12px 14px;display:grid;gap:8px"><button class="btn-add" onclick="generateReport(\'day\')">Rapport du jour</button><button class="btn-add" onclick="generateReport(\'week\')">Rapport semaine</button><button class="btn-add" onclick="generateReport(\'month\')">Rapport mois</button><button class="btn-sm" onclick="purgeDoneMonth()">Archiver puis supprimer tâches terminées du mois</button><div class="muted">À 23h59, si l’application est ouverte, le rapport est préparé automatiquement. Sinon il est proposé au prochain lancement.</div></div></div>';
+  h+='<div class="chart-card"><div class="chart-title">Archives locales</div>'+(REPORT_ARCHIVE.length?REPORT_ARCHIVE.slice().reverse().map(function(r){return '<div class="kpi-line"><span>'+esc(r.label)+'</span><button class="btn-sm" onclick="downloadReportHtml(\''+r.id+'\')">Télécharger</button></div>';}).join(''):'<p class="muted">Aucune archive</p>')+'</div>';return h;};
+function periodBounds(type){var now=new Date(),start=new Date(now),label='';if(type==='day'){start.setHours(0,0,0,0);label='Rapport journalier '+now.toLocaleDateString('fr-FR');}else if(type==='week'){var d=(now.getDay()+6)%7;start.setDate(now.getDate()-d);start.setHours(0,0,0,0);label='Rapport hebdomadaire semaine du '+start.toLocaleDateString('fr-FR');}else{start=new Date(now.getFullYear(),now.getMonth(),1);label='Rapport mensuel '+(now.getMonth()+1)+'/'+now.getFullYear();}return {start:start.getTime(),end:Date.now(),label:label};}
+function reportHtml(type){var b=periodBounds(type),tasks=allTasks().filter(function(t){return t.created_at>=b.start&&t.created_at<=b.end || (t.done_at&&t.done_at>=b.start&&t.done_at<=b.end);});var done=tasks.filter(function(t){return t.done;});var html='<html><head><title>'+esc(b.label)+'</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#1C2B35}h1{color:#1a7d87}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.card{border:1px solid #ddd;border-radius:12px;padding:14px}.val{font-size:26px;font-weight:700}.row{display:flex;justify-content:space-between;border-bottom:1px solid #eee;padding:7px 0}.bar{height:10px;background:#d4f1f4;border-radius:6px;overflow:hidden}.fill{height:10px;background:#24a8b4}</style></head><body><h1>'+esc(b.label)+'</h1><div class="grid"><div class="card"><div>Total</div><div class="val">'+tasks.length+'</div></div><div class="card"><div>Terminées</div><div class="val">'+done.length+'</div></div><div class="card"><div>Taux</div><div class="val">'+(tasks.length?Math.round(done.length/tasks.length*100):0)+'%</div></div><div class="card"><div>Délai moyen</div><div class="val">'+(avgMs(tasks)?formatDur(avgMs(tasks)):'—')+'</div></div></div><h2>Logements</h2>'+Object.keys(group(tasks.filter(function(t){return t.housing_type;}),'housing_type')).map(function(k){var m=group(tasks,'housing_type');return '<div class="row"><span>'+esc(k)+'</span><b>'+m[k]+'</b></div>';}).join('')+'<h2>Tâches</h2>'+tasks.map(function(t){return '<div class="row"><span>'+esc(t.texte)+'</span><span>'+esc(getAgentLabel(t))+' — '+(t.done?'terminée':'en cours')+'</span></div>';}).join('')+'<script>window.onload=function(){setTimeout(function(){window.print()},300)}<\/script></body></html>';return {label:b.label,html:html};}
+window.generateReport=function(type){var r=reportHtml(type);var id='r'+Date.now();REPORT_ARCHIVE.push({id:id,label:r.label,html:r.html,ts:Date.now()});saveExtra();var w=window.open('','_blank');if(w){w.document.write(r.html);w.document.close();}toast('Rapport généré');render();};
+window.downloadReportHtml=function(id){var r=REPORT_ARCHIVE.find(function(x){return x.id===id;});if(!r)return;var blob=new Blob([r.html],{type:'text/html'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=r.label.replace(/[^a-z0-9]+/gi,'_')+'.html';a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);};
+window.purgeDoneMonth=function(){var b=periodBounds('month');['menage','technique','accueil'].forEach(function(m){TASKS[m]=TASKS[m].filter(function(t){return !(t.done&&t.done_at>=b.start&&t.done_at<=b.end);});});save();toast('Tâches terminées du mois supprimées');render();};
+var _oldBuildNav=window.buildNav;
+window.buildNav=function(){var role=currentUser.role,pages=[{id:'tasks',label:'Tâches',icon:'☑'}];if(role==='admin'||role==='responsable'){pages.push({id:'stats',label:'Suivi',icon:'▥'});pages.push({id:'clients',label:'Clients',icon:'!' });pages.push({id:'rapports',label:'Rapports',icon:'PDF'});}pages.push({id:'equipe',label:'Équipe',icon:'👥'});document.getElementById('bottom-nav').innerHTML=pages.map(function(p){var dot=(p.id==='tasks'&&countUrgent()>0)?'<span class="nav-urgent"></span>':'';return '<button class="nav-btn" id="nav-'+p.id+'" onclick="navigateTo(\''+p.id+'\')">'+dot+'<span class="nav-ico-text">'+p.icon+'</span><span>'+p.label+'</span></button>';}).join('');};
+window.render=function(){var el=document.getElementById('main-content');if(currentPage==='tasks')el.innerHTML=renderTasks();if(currentPage==='stats')el.innerHTML=renderStats();if(currentPage==='equipe')el.innerHTML=renderEquipe();if(currentPage==='profil')el.innerHTML=renderProfil();if(currentPage==='clients')el.innerHTML=renderClients();if(currentPage==='rapports')el.innerHTML=renderRapports();};
+function showClientScreen(){document.body.innerHTML='<div class="client-public"><div class="client-box"><h1>Signaler un problème</h1><p>Votre message sera transmis au responsable du camping.</p><input id="cp-place" placeholder="N° logement / emplacement (facultatif)"/><textarea id="cp-text" rows="5" placeholder="Décrivez le problème…"></textarea><button onclick="submitClientPublic()">Envoyer</button><div id="cp-ok"></div></div></div>';}
+window.submitClientPublic=function(){loadExtra();var txt=document.getElementById('cp-text').value.trim(),place=document.getElementById('cp-place').value.trim();if(!txt){document.getElementById('cp-ok').textContent='Merci de décrire le problème.';return;}CLIENT_REPORTS.push({id:'cr'+Date.now(),text:txt,place:place,ts:Date.now(),status:'open'});saveExtra();document.getElementById('cp-ok').textContent='Message envoyé. Merci.';document.getElementById('cp-text').value='';};
+function addClientLinkButton(){var card=document.querySelector('.login-card');if(card&&!document.getElementById('client-access')){var b=document.createElement('button');b.id='client-access';b.className='btn-main';b.style.marginTop='10px';b.textContent='Accès client — signaler un problème';b.onclick=function(){location.hash='client';location.reload();};card.appendChild(b);}}
+function scheduledReports(){var now=new Date();var key='cp_last_auto_report_'+now.toISOString().slice(0,10);if(now.getHours()===23&&now.getMinutes()>=59&&!localStorage.getItem(key)){generateReport('day');localStorage.setItem(key,'1');}setTimeout(scheduledReports,30000);}
+window.addEventListener('DOMContentLoaded',function(){loadExtra();if(location.hash==='#client'){showClientScreen();return;}addClientLinkButton();scheduledReports();});
+})();
+
 </script>
 
 <div id="bravo-overlay">
