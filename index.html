@@ -431,6 +431,22 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 .comment-item{border-left-width:4px}.reply{background:rgba(255,255,255,.55);border-radius:8px;padding:4px 6px}
 @media(max-width:430px){.kpi-grid-pro{grid-template-columns:1fr}.bar-row-pro{grid-template-columns:82px 1fr 42px}}
 
+
+
+/* CLIENT QR PORTAL */
+#client-screen{background:linear-gradient(160deg,var(--blue-d) 0%,var(--blue) 52%,var(--sand) 52%);padding:18px;min-height:100vh;overflow-y:auto}
+.client-card{width:100%;max-width:520px;margin:0 auto;background:var(--white);border-radius:24px;padding:22px;box-shadow:0 10px 34px rgba(0,0,0,.18);border:1.5px solid var(--sand-d)}
+.client-logo{text-align:center;margin-bottom:14px}.client-logo img{max-width:120px;height:auto;margin-bottom:8px}.client-logo h1{font-size:20px;color:var(--text);margin:0}.client-logo p{font-size:13px;color:var(--text2);margin-top:2px}
+.lang-flags{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin:12px 0 16px}.flag-btn{border:1.5px solid var(--sand-d);background:var(--sand);border-radius:14px;padding:8px 2px;font-size:20px;cursor:pointer;transition:.15s}.flag-btn.active{background:var(--blue-l);border-color:var(--blue);box-shadow:0 2px 8px rgba(36,168,180,.18)}
+.client-field{margin-bottom:12px}.client-field label{display:block;font-size:12px;font-weight:800;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:.4px}.client-field input,.client-field textarea{width:100%;padding:12px 13px;border:1.5px solid var(--sand-d);border-radius:14px;font-family:inherit;font-size:15px;background:var(--sand);outline:none;color:var(--text)}.client-field textarea{resize:vertical;min-height:118px}.client-field input:focus,.client-field textarea:focus{background:#fff;border-color:var(--blue)}
+.client-submit{width:100%;border:0;border-radius:15px;padding:14px;background:linear-gradient(135deg,var(--blue),var(--blue-d));color:#fff;font-size:16px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 4px 12px rgba(36,168,180,.28)}
+.client-ok{display:none;margin-top:12px;padding:12px 14px;background:var(--green-l);border:1.5px solid #b8e6c2;color:var(--green-d);border-radius:14px;font-size:14px;font-weight:700}.client-back{display:block;text-align:center;margin-top:13px;color:var(--text3);font-size:12px;text-decoration:underline;cursor:pointer}
+.client-admin-card{background:var(--white);border:1.5px solid var(--sand-d);border-radius:18px;padding:14px;margin-bottom:10px;box-shadow:var(--sh)}
+.client-admin-card.is-new{border-left:5px solid var(--danger)}.client-admin-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:8px}.client-admin-title{font-weight:900;font-size:14px;color:var(--text)}.client-admin-meta{font-size:11px;color:var(--text3);line-height:1.35}.client-status{font-size:10px;font-weight:900;border-radius:99px;padding:3px 8px;background:var(--blue-l);color:var(--blue-d);white-space:nowrap}.client-status.new{background:var(--danger-l);color:var(--danger-d)}.client-status.sent{background:var(--green-l);color:var(--green-d)}
+.client-problem{font-size:13px;color:var(--text);line-height:1.4;background:var(--sand);border-radius:12px;padding:10px;margin:8px 0;border:1px solid var(--sand-d)}
+.client-link-box{background:var(--sand);border:1.5px dashed var(--blue);border-radius:16px;padding:12px;margin-bottom:12px}.client-link-box input{width:100%;padding:10px;border:1px solid var(--sand-d);border-radius:10px;font-size:12px;background:#fff;color:var(--text);font-family:monospace}.client-link-actions{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}.client-mini-btn{border:0;border-radius:10px;padding:8px 10px;font-family:inherit;font-size:12px;font-weight:800;cursor:pointer;background:var(--blue);color:#fff}.client-mini-btn.light{background:var(--sand-d);color:var(--text2)}.client-mini-btn.danger{background:var(--danger-l);color:var(--danger-d)}
+.client-admin-tools{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:9px}.client-admin-tools select,.client-admin-tools textarea{width:100%;border:1.5px solid var(--sand-d);border-radius:10px;padding:8px;font-family:inherit;font-size:12px;background:var(--sand);color:var(--text);outline:none}.client-admin-tools textarea{grid-column:1/-1;min-height:62px;resize:vertical;background:#fff}.client-admin-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+@media(max-width:430px){.lang-flags{grid-template-columns:repeat(5,1fr)}.client-admin-tools{grid-template-columns:1fr}.client-card{padding:18px}}
 </style>
 
 <style id="braou-suivi-v4-style">
@@ -585,6 +601,24 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 <body>
 <div id="app">
 
+<!-- CLIENT PUBLIC QR -->
+<div id="client-screen" class="screen">
+  <div class="client-card">
+    <div class="client-logo">
+      <img src="https://www.campingaudenge.com/wp-content/uploads/2022/04/logo-minimaliste-blanc-camping-du-braou.png" alt="Le Braou" onerror="this.style.display='none'"/>
+      <h1 id="client-title">Signaler un problème</h1>
+      <p id="client-subtitle">Aucun compte nécessaire</p>
+    </div>
+    <div class="lang-flags" id="client-lang-flags"></div>
+    <div class="client-field"><label id="client-loc-label">Numéro d’emplacement</label><input type="text" id="client-location" inputmode="numeric" placeholder="Ex. 42"/></div>
+    <div class="client-field"><label id="client-msg-label">Votre problème</label><textarea id="client-message" placeholder="Décrivez le problème ici…"></textarea></div>
+    <button class="client-submit" id="client-submit-btn" onclick="submitClientRequest()">Envoyer la demande</button>
+    <div class="client-ok" id="client-ok-msg">Votre demande a bien été envoyée.</div>
+    <span class="client-back" onclick="showLoginScreen()">Accès équipe</span>
+  </div>
+</div>
+
+
 <!-- LOGIN -->
 <div id="login-screen" class="screen active">
   <div class="login-card">
@@ -648,7 +682,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Ro
 </div>
 
 <script>
-var DATA_VERSION='6'; // unchanged — client requests stored separately in cp_client_requests
+var DATA_VERSION='6';
 var NOTIF_SOUND_ENABLED = true;
 
 // ── NOTIFICATION SOUND ──
@@ -710,7 +744,7 @@ function toggleNotif(cb){
 
 var DEFAULT_CODES={admin:'1234',responsable:'2345',menage:'3456',technique:'4567',accueil:'5678'};
 var DEFAULT_USERS=[{id:'u1',nom:'Bryan',email:'bryan.briones33980@gmail.com',password:'admin123',role:'admin',photo:null}];
-var USERS=[],TASKS={menage:[],technique:[],accueil:[]},CODES={};
+var USERS=[],TASKS={menage:[],technique:[],accueil:[]},CODES={},CLIENT_REQUESTS=[];
 var currentUser=null,currentPage='tasks',currentModule='menage',currentFilter='todo',currentAgentFilter='all';
 var noteOpen={},replyOpen={},photoTarget=null,_modalCb=null;
 
@@ -975,6 +1009,100 @@ function load(){
   }catch(e){USERS=JSON.parse(JSON.stringify(DEFAULT_USERS));TASKS={menage:[],technique:[],accueil:[]};CODES=JSON.parse(JSON.stringify(DEFAULT_CODES));}
 }
 
+
+
+// ── CLIENT REQUESTS (QR PUBLIC) ──
+function loadClientRequests(){
+  try{CLIENT_REQUESTS=JSON.parse(localStorage.getItem('cp_client_requests')||'[]')||[];}catch(e){CLIENT_REQUESTS=[];}
+}
+function saveClientRequests(){
+  try{localStorage.setItem('cp_client_requests',JSON.stringify(CLIENT_REQUESTS));}catch(e){}
+}
+var CLIENT_LANG='fr';
+var CLIENT_I18N={
+  fr:{flag:'🇫🇷',title:'Signaler un problème',sub:'Aucun compte nécessaire',loc:'Numéro d’emplacement',msg:'Votre problème',phLoc:'Ex. 42',phMsg:'Décrivez le problème ici…',send:'Envoyer la demande',ok:'Votre demande a bien été envoyée.',need:'Merci d’indiquer votre emplacement et le problème.'},
+  en:{flag:'🇬🇧',title:'Report a problem',sub:'No account required',loc:'Pitch / unit number',msg:'Your problem',phLoc:'e.g. 42',phMsg:'Describe the problem here…',send:'Send request',ok:'Your request has been sent.',need:'Please enter your location and the problem.'},
+  de:{flag:'🇩🇪',title:'Problem melden',sub:'Kein Konto erforderlich',loc:'Stellplatznummer',msg:'Ihr Problem',phLoc:'z. B. 42',phMsg:'Beschreiben Sie das Problem…',send:'Anfrage senden',ok:'Ihre Anfrage wurde gesendet.',need:'Bitte Standort und Problem angeben.'},
+  nl:{flag:'🇳🇱',title:'Probleem melden',sub:'Geen account nodig',loc:'Plaatsnummer',msg:'Uw probleem',phLoc:'Bijv. 42',phMsg:'Beschrijf het probleem…',send:'Verzoek verzenden',ok:'Uw verzoek is verzonden.',need:'Vul uw plaats en probleem in.'},
+  es:{flag:'🇪🇸',title:'Informar de un problema',sub:'Sin cuenta necesaria',loc:'Número de parcela',msg:'Su problema',phLoc:'Ej. 42',phMsg:'Describa el problema…',send:'Enviar solicitud',ok:'Su solicitud ha sido enviada.',need:'Indique su ubicación y el problema.'},
+  pt:{flag:'🇵🇹',title:'Comunicar um problema',sub:'Sem conta necessária',loc:'Número do lugar',msg:'O seu problema',phLoc:'Ex. 42',phMsg:'Descreva o problema…',send:'Enviar pedido',ok:'O seu pedido foi enviado.',need:'Indique o local e o problema.'},
+  it:{flag:'🇮🇹',title:'Segnala un problema',sub:'Nessun account richiesto',loc:'Numero piazzola',msg:'Il tuo problema',phLoc:'Es. 42',phMsg:'Descrivi il problema…',send:'Invia richiesta',ok:'La richiesta è stata inviata.',need:'Inserisci posizione e problema.'},
+  ru:{flag:'🇷🇺',title:'Сообщить о проблеме',sub:'Аккаунт не нужен',loc:'Номер места',msg:'Ваша проблема',phLoc:'Напр. 42',phMsg:'Опишите проблему…',send:'Отправить заявку',ok:'Заявка отправлена.',need:'Укажите место и проблему.'},
+  ar:{flag:'🇸🇦',title:'الإبلاغ عن مشكلة',sub:'لا حاجة لحساب',loc:'رقم المكان',msg:'المشكلة',phLoc:'مثال 42',phMsg:'اكتب المشكلة هنا…',send:'إرسال الطلب',ok:'تم إرسال طلبك.',need:'يرجى إدخال المكان والمشكلة.'},
+  zh:{flag:'🇨🇳',title:'报告问题',sub:'无需账号',loc:'营位编号',msg:'您的问题',phLoc:'例如 42',phMsg:'请描述问题…',send:'发送请求',ok:'您的请求已发送。',need:'请填写位置和问题。'}
+};
+function renderClientLangFlags(){
+  var el=document.getElementById('client-lang-flags'); if(!el)return;
+  el.innerHTML=Object.keys(CLIENT_I18N).map(function(k){return '<button class="flag-btn '+(CLIENT_LANG===k?'active':'')+'" onclick="setClientLang(\''+k+'\')" title="'+k.toUpperCase()+'">'+CLIENT_I18N[k].flag+'</button>';}).join('');
+}
+function setClientLang(lang){
+  CLIENT_LANG=CLIENT_I18N[lang]?lang:'fr'; var d=CLIENT_I18N[CLIENT_LANG];
+  document.documentElement.dir=(CLIENT_LANG==='ar')?'rtl':'ltr';
+  var ids={title:'client-title',sub:'client-subtitle',loc:'client-loc-label',msg:'client-msg-label',send:'client-submit-btn'};
+  document.getElementById(ids.title).textContent=d.title;document.getElementById(ids.sub).textContent=d.sub;document.getElementById(ids.loc).textContent=d.loc;document.getElementById(ids.msg).textContent=d.msg;document.getElementById(ids.send).textContent=d.send;
+  document.getElementById('client-location').placeholder=d.phLoc;document.getElementById('client-message').placeholder=d.phMsg;document.getElementById('client-ok-msg').textContent=d.ok;
+  renderClientLangFlags();
+}
+function showClientPortal(){
+  document.getElementById('client-screen').classList.add('active');
+  document.getElementById('login-screen').classList.remove('active');
+  document.getElementById('main-screen').classList.remove('active');
+  setClientLang(CLIENT_LANG);
+}
+function showLoginScreen(){
+  document.documentElement.dir='ltr';
+  if(location.hash==='#client') history.replaceState(null,'',location.pathname+location.search);
+  document.getElementById('client-screen').classList.remove('active');
+  if(currentUser){showApp();}else{document.getElementById('login-screen').classList.add('active');document.getElementById('main-screen').classList.remove('active');}
+}
+function submitClientRequest(){
+  var loc=(document.getElementById('client-location').value||'').trim();
+  var msg=(document.getElementById('client-message').value||'').trim();
+  var d=CLIENT_I18N[CLIENT_LANG]||CLIENT_I18N.fr;
+  if(!loc||!msg){alert(d.need);return;}
+  CLIENT_REQUESTS.unshift({id:'cr'+Date.now(),location:loc,message:msg,lang:CLIENT_LANG,status:'new',created_at:Date.now(),edited_text:'',sent_task_id:null});
+  saveClientRequests();
+  document.getElementById('client-location').value='';document.getElementById('client-message').value='';
+  var ok=document.getElementById('client-ok-msg');ok.textContent=d.ok;ok.style.display='block';setTimeout(function(){ok.style.display='none';},4500);
+}
+function countNewClientRequests(){return CLIENT_REQUESTS.filter(function(r){return r.status==='new';}).length;}
+function getClientPortalUrl(){return location.href.split('#')[0]+'#client';}
+function renderClients(){
+  var can=currentUser&&(currentUser.role==='admin'||currentUser.role==='responsable');
+  if(!can) return '<div class="empty"><p>Accès réservé aux responsables et admins.</p></div>';
+  var newCount=countNewClientRequests();
+  var h='<div class="page-hd"><div><div class="page-title">📩 Clients</div><div class="page-sub">'+newCount+' nouvelle(s) demande(s) — lien QR public</div></div></div>';
+  h+='<div class="client-link-box"><div style="font-size:12px;font-weight:900;color:var(--text2);margin-bottom:6px">Lien à transformer en QR code</div><input id="client-public-link" readonly value="'+esc(getClientPortalUrl())+'"/><div class="client-link-actions"><button class="client-mini-btn" onclick="copyClientLink()">Copier le lien</button><button class="client-mini-btn light" onclick="openClientPortalPreview()">Ouvrir la page client</button></div><div style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.35">Important : ce lien ouvre la page client sans compte. Pour recevoir les demandes depuis les téléphones des clients sur l’espace admin, il faudra héberger les données sur une base type Firebase/Supabase ou serveur. En fichier HTML seul, le stockage reste local au navigateur.</div></div>';
+  if(!CLIENT_REQUESTS.length){h+='<div class="empty"><p>Aucune demande client.</p></div>';return h;}
+  CLIENT_REQUESTS.forEach(function(r){
+    var st=r.status==='new'?'Nouvelle':(r.status==='sent'?'Envoyée en tâche':'En attente');
+    var stc=r.status==='new'?'new':(r.status==='sent'?'sent':'');
+    var txt=r.edited_text||r.message;
+    h+='<div class="client-admin-card '+(r.status==='new'?'is-new':'')+'">';
+    h+='<div class="client-admin-top"><div><div class="client-admin-title">Emplacement '+esc(r.location)+'</div><div class="client-admin-meta">'+timeAgo(r.created_at)+' · langue '+esc((CLIENT_I18N[r.lang]||{}).flag||r.lang)+'</div></div><span class="client-status '+stc+'">'+st+'</span></div>';
+    h+='<div class="client-problem">'+esc(r.message)+'</div>';
+    h+='<div class="client-admin-tools"><select id="cr-mod-'+r.id+'"><option value="technique">🔧 Pôle Technique</option><option value="menage">🧹 Pôle Ménage</option><option value="accueil">🛎 Pôle Accueil</option></select><select id="cr-agent-'+r.id+'"><option value="">— Attribuer au pôle —</option>'+USERS.filter(function(u){return ['admin','responsable','menage','technique','accueil'].indexOf(u.role)>=0;}).map(function(u){return '<option value="'+u.id+'">'+esc(u.nom)+' — '+esc(u.role)+'</option>';}).join('')+'</select><textarea id="cr-text-'+r.id+'" placeholder="Texte compréhensible pour les salariés…">'+esc(txt)+'</textarea></div>';
+    h+='<div class="client-admin-actions"><button class="client-mini-btn" onclick="sendClientRequestToTask(\''+r.id+'\')">Envoyer en tâche</button><button class="client-mini-btn light" onclick="keepClientRequest(\''+r.id+'\')">Laisser telle quelle</button><button class="client-mini-btn danger" onclick="deleteClientRequest(\''+r.id+'\')">Supprimer</button></div>';
+    h+='</div>';
+  });
+  return h;
+}
+function copyClientLink(){var el=document.getElementById('client-public-link');if(!el)return;el.select();el.setSelectionRange(0,99999);try{document.execCommand('copy');toast('Lien copié');}catch(e){toast('Copie impossible');}}
+function openClientPortalPreview(){window.open(getClientPortalUrl(),'_blank');}
+function findClientRequest(id){return CLIENT_REQUESTS.find(function(r){return r.id===id;});}
+function keepClientRequest(id){var r=findClientRequest(id);if(!r)return;r.status='pending';saveClientRequests();toast('Demande laissée en attente');buildNav();render();}
+function deleteClientRequest(id){var r=findClientRequest(id);if(!r)return;showModal('Supprimer cette demande client ?',('Emplacement '+r.location+' — '+r.message).slice(0,100),function(){CLIENT_REQUESTS=CLIENT_REQUESTS.filter(function(x){return x.id!==id;});saveClientRequests();toast('Demande supprimée');buildNav();render();});}
+function sendClientRequestToTask(id){
+  var r=findClientRequest(id);if(!r)return;
+  var modEl=document.getElementById('cr-mod-'+id),agEl=document.getElementById('cr-agent-'+id),txEl=document.getElementById('cr-text-'+id);
+  var mod=modEl?modEl.value:'technique'; var aid=(agEl&&agEl.value)?agEl.value:'pole_'+mod; var txt=(txEl&&txEl.value.trim())?txEl.value.trim():r.message;
+  var full='Client emplacement '+r.location+' — '+txt;
+  TASKS[mod].unshift({id:'t'+Date.now(),texte:full,priorite:'high',agent_id:aid,agent_name:null,done:false,note:'',recur:false,created_at:Date.now(),done_at:null,comments:[{id:'c'+Date.now(),author:currentUser.nom,text:'Demande client filtrée depuis la page QR. Texte original : '+r.message,ts:Date.now(),replies:[]}],preset:null,logement_type:null,logement_num:parseInt(r.location,10)||null,source:'client',client_request_id:r.id});
+  r.status='sent';r.edited_text=txt;r.sent_task_id=TASKS[mod][0].id;
+  save();saveClientRequests();toast('Demande envoyée en tâche ✓');buildNav();render();
+}
+window.addEventListener('hashchange',function(){if(location.hash==='#client')showClientPortal();});
+
 // ── RECURRENTES ──
 function checkRecurring(){
   var today=new Date(); today.setHours(0,0,0,0); var todayTs=today.getTime();
@@ -994,16 +1122,10 @@ function checkRecurring(){
 }
 
 window.addEventListener('DOMContentLoaded',function(){
-  // ── CLIENT PAGE MODE (QR code) ──
-  if(window.location.search.indexOf('client=1')>=0){
-    document.getElementById('app').style.display='none';
-    document.getElementById('client-page').style.display='flex';
-    initClientPage();
-    return;
-  }
   loadNotifPref();
-  load(); checkRecurring();
+  load(); loadClientRequests(); checkRecurring();
   loadCustomPositions();
+  if(location.hash==='#client'){ showClientPortal(); return; }
   // Restaurer la session si déjà connecté
   var savedId = localStorage.getItem('cp_session');
   if(savedId){
@@ -1056,6 +1178,7 @@ function doRegister(){
 function doLogout(){
   currentUser=null;currentPage='tasks';currentModule='menage';currentFilter='todo';currentAgentFilter='all';
   localStorage.removeItem('cp_session');
+  document.getElementById('client-screen').classList.remove('active');
   document.getElementById('login-screen').classList.add('active');
   document.getElementById('main-screen').classList.remove('active');
   document.getElementById('l-email').value='';document.getElementById('l-pass').value='';
@@ -1064,6 +1187,7 @@ function doLogout(){
 
 // ── APP ──
 function showApp(){
+  document.getElementById('client-screen').classList.remove('active');
   document.getElementById('login-screen').classList.remove('active');
   document.getElementById('main-screen').classList.add('active');
   // Définir module par défaut selon rôle
@@ -1086,22 +1210,21 @@ function buildNav(){
   var role=currentUser.role;
   var pages=[{id:'tasks',label:'Tâches',icon:'list'}];
   pages.push({id:'carte',label:'Carte',icon:'map'});
+  if(role==='admin'||role==='responsable') pages.push({id:'clients',label:'Clients',icon:'mail'});
   if(role==='admin'||role==='responsable') pages.push({id:'stats',label:'Suivi',icon:'chart'});
-  if(role==='admin'||role==='responsable') pages.push({id:'clients',label:'Clients',icon:'bell'});
   pages.push({id:'equipe',label:'Équipe',icon:'users'});
   var icons={
     list:'<svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>',
     chart:'<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
     users:'<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
     map:'<svg viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
-    bell:'<svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>'
+    mail:'<svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>'
   };
   var urg=countUrgent();
-  var cliCount=getClientRequestsCount();
+  var cr=countNewClientRequests();
   document.getElementById('bottom-nav').innerHTML=pages.map(function(p){
-    var dot=(p.id==='tasks'&&urg>0)?'<span class="nav-urgent"></span>':'';
-    var cdot=(p.id==='clients'&&cliCount>0)?'<span class="nav-urgent" style="background:#9b59b6"></span>':'';
-    return '<button class="nav-btn" id="nav-'+p.id+'" onclick="navigateTo(\''+p.id+'\')">'+dot+cdot+icons[p.icon]+'<span>'+p.label+(cliCount>0&&p.id==='clients'?' ('+cliCount+')':'')+'</span></button>';
+    var dot=((p.id==='tasks'&&urg>0)||(p.id==='clients'&&cr>0))?'<span class="nav-urgent"></span>':'';
+    return '<button class="nav-btn" id="nav-'+p.id+'" onclick="navigateTo(\''+p.id+'\')">'+dot+icons[p.icon]+'<span>'+p.label+'</span></button>';
   }).join('');
 }
 function navigateTo(page){
@@ -1113,11 +1236,11 @@ function navigateTo(page){
 function render(){
   var el=document.getElementById('main-content');
   if(currentPage==='tasks')  { el.innerHTML=renderTasks(); initLogementDatalist(); }
+  if(currentPage==='clients') el.innerHTML=renderClients();
   if(currentPage==='stats')  el.innerHTML=renderStats();
   if(currentPage==='carte')  el.innerHTML=renderCarte();
   if(currentPage==='equipe') el.innerHTML=renderEquipe();
   if(currentPage==='profil') el.innerHTML=renderProfil();
-  if(currentPage==='clients') el.innerHTML=renderClientRequests();
 }
 function initLogementDatalist(){
   var datalist = document.getElementById('logement-num-list');
@@ -2974,413 +3097,6 @@ window.renderStats=function(){
 })();
 </script>
 
-<!-- CLIENT PAGE (QR code access, no login) -->
-<div id="client-page" style="display:none;flex-direction:column;min-height:100vh;background:linear-gradient(160deg,#1a3a2a 0%,#2d6a4f 50%,#1a3a2a 100%);align-items:center;justify-content:center;padding:20px;font-family:'Segoe UI',system-ui,sans-serif">
-  <style>
-  #client-page{box-sizing:border-box}
-  .cp-card{background:#fff;border-radius:24px;padding:28px 24px;max-width:440px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25)}
-  .cp-logo{text-align:center;margin-bottom:18px}
-  .cp-logo h1{font-size:20px;font-weight:800;color:#1a3a2a;margin:8px 0 2px}
-  .cp-logo p{font-size:13px;color:#666;margin:0}
-  .cp-langs{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px}
-  .cp-lang{background:#f5f5f0;border:2px solid transparent;border-radius:12px;padding:8px 10px;cursor:pointer;font-size:18px;line-height:1;transition:all .15s;user-select:none}
-  .cp-lang.active{border-color:#2d6a4f;background:#e8f5ee}
-  .cp-form{display:flex;flex-direction:column;gap:14px}
-  .cp-field label{display:block;font-size:12px;font-weight:700;color:#444;margin-bottom:5px;text-transform:uppercase;letter-spacing:.04em}
-  .cp-field input,.cp-field textarea,.cp-field select{width:100%;box-sizing:border-box;border:1.5px solid #ddd;border-radius:10px;padding:11px 13px;font-size:15px;font-family:inherit;outline:none;transition:border .15s}
-  .cp-field input:focus,.cp-field textarea:focus{border-color:#2d6a4f}
-  .cp-field textarea{resize:vertical;min-height:90px}
-  .cp-cats{display:flex;flex-wrap:wrap;gap:7px}
-  .cp-cat{background:#f5f5f0;border:2px solid #e0ddd6;border-radius:10px;padding:8px 12px;cursor:pointer;font-size:13px;font-weight:600;color:#333;transition:all .15s}
-  .cp-cat.active{border-color:#2d6a4f;background:#e8f5ee;color:#1a3a2a}
-  .cp-btn{background:linear-gradient(135deg,#2d6a4f,#52b788);color:#fff;border:none;border-radius:12px;padding:15px;font-size:16px;font-weight:800;cursor:pointer;width:100%;letter-spacing:.03em;transition:opacity .15s}
-  .cp-btn:hover{opacity:.9}
-  .cp-btn:disabled{opacity:.5;cursor:not-allowed}
-  .cp-success{text-align:center;padding:20px 0}
-  .cp-success .cp-ok-icon{font-size:60px;margin-bottom:12px}
-  .cp-success h2{font-size:20px;font-weight:800;color:#1a3a2a;margin:0 0 8px}
-  .cp-success p{font-size:14px;color:#555;margin:0}
-  .cp-err{background:#ffeaea;border:1px solid #f5c6c6;border-radius:8px;padding:10px 12px;font-size:13px;color:#c0392b;display:none}
-  </style>
-  <div class="cp-card" id="cp-card">
-    <!-- Language selection -->
-    <div id="cp-step-lang">
-      <div class="cp-logo">
-        <img src="https://www.campingaudenge.com/wp-content/uploads/2022/04/logo-minimaliste-blanc-camping-du-braou.png" alt="Le Braou" style="height:48px;filter:invert(1) brightness(.2) sepia(1) hue-rotate(80deg) saturate(2)" onerror="this.style.display='none'"/>
-        <h1>Camping Le Braou</h1>
-        <p style="font-size:14px;color:#555;margin-top:4px">Choisissez votre langue / Choose your language</p>
-      </div>
-      <div class="cp-langs" id="cp-langs">
-        <div class="cp-lang active" data-lang="fr" onclick="cpSelectLang('fr')" title="Français">🇫🇷</div>
-        <div class="cp-lang" data-lang="en" onclick="cpSelectLang('en')" title="English">🇬🇧</div>
-        <div class="cp-lang" data-lang="de" onclick="cpSelectLang('de')" title="Deutsch">🇩🇪</div>
-        <div class="cp-lang" data-lang="nl" onclick="cpSelectLang('nl')" title="Nederlands">🇳🇱</div>
-        <div class="cp-lang" data-lang="es" onclick="cpSelectLang('es')" title="Español">🇪🇸</div>
-        <div class="cp-lang" data-lang="pt" onclick="cpSelectLang('pt')" title="Português">🇵🇹</div>
-        <div class="cp-lang" data-lang="it" onclick="cpSelectLang('it')" title="Italiano">🇮🇹</div>
-        <div class="cp-lang" data-lang="ru" onclick="cpSelectLang('ru')" title="Русский">🇷🇺</div>
-        <div class="cp-lang" data-lang="ar" onclick="cpSelectLang('ar')" title="العربية">🇸🇦</div>
-        <div class="cp-lang" data-lang="zh" onclick="cpSelectLang('zh')" title="中文">🇨🇳</div>
-      </div>
-      <button class="cp-btn" onclick="cpGoToForm()" id="cp-lang-next">Continuer →</button>
-    </div>
-
-    <!-- Report form -->
-    <div id="cp-step-form" style="display:none">
-      <div class="cp-logo">
-        <h1 id="cp-title">Signaler un problème</h1>
-        <p id="cp-subtitle">Emplacement n° — Problème</p>
-      </div>
-      <div class="cp-form">
-        <div class="cp-field">
-          <label id="cp-lbl-num">N° d'emplacement</label>
-          <input type="number" id="cp-num" min="1" max="250" placeholder="Ex: 42" inputmode="numeric"/>
-        </div>
-        <div class="cp-field">
-          <label id="cp-lbl-cat">Catégorie</label>
-          <div class="cp-cats" id="cp-cats"></div>
-        </div>
-        <div class="cp-field">
-          <label id="cp-lbl-desc">Description</label>
-          <textarea id="cp-desc" rows="3"></textarea>
-        </div>
-        <div class="cp-err" id="cp-err"></div>
-        <button class="cp-btn" id="cp-submit" onclick="cpSubmit()">Envoyer</button>
-        <button style="background:none;border:none;color:#888;font-size:13px;cursor:pointer;text-align:center" onclick="cpBackToLang()">← Langue / Language</button>
-      </div>
-    </div>
-
-    <!-- Success -->
-    <div id="cp-step-ok" style="display:none">
-      <div class="cp-success">
-        <div class="cp-ok-icon">✅</div>
-        <h2 id="cp-ok-title">Merci !</h2>
-        <p id="cp-ok-msg">Votre signalement a bien été transmis. Notre équipe interviendra rapidement.</p>
-        <button class="cp-btn" style="margin-top:20px" onclick="cpReset()">Nouveau signalement</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-// ══════════════════════════════════════════════
-// CLIENT PAGE LOGIC
-// ══════════════════════════════════════════════
-var CP_LANG = 'fr';
-var CP_TRANSLATIONS = {
-  fr:{title:'Signaler un problème',subtitle:'Sans inscription — Gratuit',numLbl:'N° d\'emplacement',catLbl:'Catégorie du problème',descLbl:'Décrivez le problème',descPh:'Ex: La douche ne fonctionne pas...',submit:'Envoyer',okTitle:'Merci !',okMsg:'Votre signalement a bien été transmis. Notre équipe interviendra rapidement.',newRep:'Nouveau signalement',cats:['🚿 Sanitaires','🔌 Électricité','🌊 Eau / Plomberie','🗑 Propreté','📶 Wi-Fi','🔒 Serrure / Accès','🐜 Insectes / Animaux','⚠️ Sécurité','📦 Équipement manquant','❓ Autre'],err:'Veuillez renseigner votre n° d\'emplacement et décrire le problème.',numReq:'N° d\'emplacement requis.'},
-  en:{title:'Report an issue',subtitle:'No registration — Free',numLbl:'Pitch number',catLbl:'Issue category',descLbl:'Describe the issue',descPh:'e.g. The shower is not working...',submit:'Send',okTitle:'Thank you!',okMsg:'Your report has been sent. Our team will take care of it quickly.',newRep:'New report',cats:['🚿 Sanitary','🔌 Electricity','🌊 Water / Plumbing','🗑 Cleanliness','📶 Wi-Fi','🔒 Lock / Access','🐜 Insects / Animals','⚠️ Safety','📦 Missing equipment','❓ Other'],err:'Please fill in your pitch number and describe the issue.',numReq:'Pitch number required.'},
-  de:{title:'Problem melden',subtitle:'Ohne Anmeldung — Kostenlos',numLbl:'Stellplatznummer',catLbl:'Problemkategorie',descLbl:'Beschreiben Sie das Problem',descPh:'z.B. Die Dusche funktioniert nicht...',submit:'Senden',okTitle:'Danke!',okMsg:'Ihre Meldung wurde übermittelt. Unser Team wird sich umgehend darum kümmern.',newRep:'Neue Meldung',cats:['🚿 Sanitär','🔌 Strom','🌊 Wasser / Sanitär','🗑 Sauberkeit','📶 Wi-Fi','🔒 Schloss / Zugang','🐜 Insekten / Tiere','⚠️ Sicherheit','📦 Fehlendes Equipment','❓ Sonstiges'],err:'Bitte geben Sie Ihre Stellplatznummer ein und beschreiben Sie das Problem.',numReq:'Stellplatznummer erforderlich.'},
-  nl:{title:'Probleem melden',subtitle:'Zonder registratie — Gratis',numLbl:'Standplaatsnummer',catLbl:'Categorie',descLbl:'Beschrijf het probleem',descPh:'Bijv. De douche werkt niet...',submit:'Versturen',okTitle:'Bedankt!',okMsg:'Uw melding is verzonden. Ons team zorgt er snel voor.',newRep:'Nieuwe melding',cats:['🚿 Sanitair','🔌 Elektriciteit','🌊 Water / Loodgieterswerk','🗑 Schoonheid','📶 Wi-Fi','🔒 Slot / Toegang','🐜 Insecten / Dieren','⚠️ Veiligheid','📦 Ontbrekende uitrusting','❓ Overige'],err:'Vul uw standplaatsnummer in en beschrijf het probleem.',numReq:'Standplaatsnummer vereist.'},
-  es:{title:'Informar un problema',subtitle:'Sin registro — Gratuito',numLbl:'N° de parcela',catLbl:'Categoría del problema',descLbl:'Describa el problema',descPh:'Ej: La ducha no funciona...',submit:'Enviar',okTitle:'¡Gracias!',okMsg:'Su informe ha sido enviado. Nuestro equipo actuará rápidamente.',newRep:'Nuevo informe',cats:['🚿 Sanitarios','🔌 Electricidad','🌊 Agua / Fontanería','🗑 Limpieza','📶 Wi-Fi','🔒 Cerradura / Acceso','🐜 Insectos / Animales','⚠️ Seguridad','📦 Equipo faltante','❓ Otro'],err:'Por favor ingrese su n° de parcela y describa el problema.',numReq:'N° de parcela requerido.'},
-  pt:{title:'Reportar um problema',subtitle:'Sem registo — Gratuito',numLbl:'N° do lote',catLbl:'Categoria',descLbl:'Descreva o problema',descPh:'Ex: O chuveiro não funciona...',submit:'Enviar',okTitle:'Obrigado!',okMsg:'O seu relatório foi enviado. A nossa equipa irá tratar disso rapidamente.',newRep:'Novo relatório',cats:['🚿 Sanitários','🔌 Eletricidade','🌊 Água / Canalização','🗑 Limpeza','📶 Wi-Fi','🔒 Fechadura / Acesso','🐜 Insetos / Animais','⚠️ Segurança','📦 Equipamento em falta','❓ Outro'],err:'Preencha o n° do lote e descreva o problema.',numReq:'N° do lote obrigatório.'},
-  it:{title:'Segnala un problema',subtitle:'Senza registrazione — Gratuito',numLbl:'N° di posto',catLbl:'Categoria',descLbl:'Descrivi il problema',descPh:'Es: La doccia non funziona...',submit:'Invia',okTitle:'Grazie!',okMsg:'La segnalazione è stata inviata. Il nostro team interverrà rapidamente.',newRep:'Nuova segnalazione',cats:['🚿 Servizi igienici','🔌 Elettricità','🌊 Acqua / Idraulica','🗑 Pulizia','📶 Wi-Fi','🔒 Serratura / Accesso','🐜 Insetti / Animali','⚠️ Sicurezza','📦 Attrezzatura mancante','❓ Altro'],err:'Inserire il n° del posto e descrivere il problema.',numReq:'N° di posto obbligatorio.'},
-  ru:{title:'Сообщить о проблеме',subtitle:'Без регистрации — Бесплатно',numLbl:'Номер места',catLbl:'Категория',descLbl:'Опишите проблему',descPh:'Напр: Душ не работает...',submit:'Отправить',okTitle:'Спасибо!',okMsg:'Ваше сообщение отправлено. Наша команда быстро займётся этим.',newRep:'Новое сообщение',cats:['🚿 Санузел','🔌 Электричество','🌊 Вода / Сантехника','🗑 Чистота','📶 Wi-Fi','🔒 Замок / Доступ','🐜 Насекомые / Животные','⚠️ Безопасность','📦 Недостающее оборудование','❓ Другое'],err:'Пожалуйста, укажите номер места и опишите проблему.',numReq:'Требуется номер места.'},
-  ar:{title:'الإبلاغ عن مشكلة',subtitle:'بدون تسجيل — مجاني',numLbl:'رقم الموقع',catLbl:'فئة المشكلة',descLbl:'وصف المشكلة',descPh:'مثال: الدش لا يعمل...',submit:'إرسال',okTitle:'شكراً!',okMsg:'تم إرسال تقريرك. سيتعامل فريقنا معه بسرعة.',newRep:'تقرير جديد',cats:['🚿 الصرف الصحي','🔌 الكهرباء','🌊 المياه / السباكة','🗑 النظافة','📶 واي فاي','🔒 القفل / الوصول','🐜 الحشرات / الحيوانات','⚠️ السلامة','📦 معدات مفقودة','❓ أخرى'],err:'يرجى إدخال رقم موقعك ووصف المشكلة.',numReq:'رقم الموقع مطلوب.'},
-  zh:{title:'报告问题',subtitle:'无需注册 — 免费',numLbl:'营位号码',catLbl:'问题类别',descLbl:'描述问题',descPh:'例如：淋浴不工作...',submit:'发送',okTitle:'谢谢！',okMsg:'您的报告已发送。我们的团队将迅速处理。',newRep:'新报告',cats:['🚿 卫生设施','🔌 电力','🌊 水/管道','🗑 清洁','📶 Wi-Fi','🔒 锁/访问','🐜 虫/动物','⚠️ 安全','📦 缺少设备','❓ 其他'],err:'请填写您的营位号码并描述问题。',numReq:'需要营位号码。'}
-};
-var cpSelectedCat = '';
-
-function initClientPage(){
-  cpRenderLangStep();
-}
-function cpSelectLang(lang){
-  CP_LANG = lang;
-  document.querySelectorAll('#cp-langs .cp-lang').forEach(function(el){
-    el.classList.toggle('active', el.dataset.lang === lang);
-  });
-  var t = CP_TRANSLATIONS[lang];
-  if(lang==='ar'){
-    document.getElementById('cp-card').setAttribute('dir','rtl');
-  } else {
-    document.getElementById('cp-card').removeAttribute('dir');
-  }
-}
-function cpRenderLangStep(){
-  document.getElementById('cp-step-lang').style.display='block';
-  document.getElementById('cp-step-form').style.display='none';
-  document.getElementById('cp-step-ok').style.display='none';
-}
-function cpGoToForm(){
-  var t = CP_TRANSLATIONS[CP_LANG];
-  document.getElementById('cp-step-lang').style.display='none';
-  document.getElementById('cp-step-form').style.display='block';
-  document.getElementById('cp-step-ok').style.display='none';
-  // Populate texts
-  document.getElementById('cp-title').textContent = t.title;
-  document.getElementById('cp-lbl-num').textContent = t.numLbl;
-  document.getElementById('cp-lbl-cat').textContent = t.catLbl;
-  document.getElementById('cp-lbl-desc').textContent = t.descLbl;
-  document.getElementById('cp-desc').placeholder = t.descPh;
-  document.getElementById('cp-submit').textContent = t.submit;
-  // Categories
-  cpSelectedCat = '';
-  var catsEl = document.getElementById('cp-cats');
-  catsEl.innerHTML = t.cats.map(function(c){
-    return '<div class="cp-cat" onclick="cpToggleCat(this,\''+c.replace(/'/g,'').replace(/"/g,'')+'\')">'+c+'</div>';
-  }).join('');
-  document.getElementById('cp-err').style.display='none';
-}
-function cpToggleCat(el, cat){
-  document.querySelectorAll('.cp-cat').forEach(function(c){c.classList.remove('active');});
-  el.classList.add('active');
-  cpSelectedCat = cat;
-}
-function cpBackToLang(){
-  cpRenderLangStep();
-}
-function cpSubmit(){
-  var t = CP_TRANSLATIONS[CP_LANG];
-  var num = document.getElementById('cp-num').value.trim();
-  var desc = document.getElementById('cp-desc').value.trim();
-  var errEl = document.getElementById('cp-err');
-  if(!num){errEl.textContent=t.numReq;errEl.style.display='block';return;}
-  if(!desc){errEl.textContent=t.err;errEl.style.display='block';return;}
-  errEl.style.display='none';
-  // Save to localStorage
-  var requests = [];
-  try{ requests = JSON.parse(localStorage.getItem('cp_client_requests')||'[]'); } catch(e){}
-  var req = {
-    id: 'cr_'+Date.now()+'_'+Math.floor(Math.random()*9999),
-    emplacement: num,
-    categorie: cpSelectedCat || '❓',
-    texte: desc,
-    lang: CP_LANG,
-    created_at: Date.now(),
-    status: 'new' // new | seen | converted | deleted
-  };
-  requests.unshift(req);
-  try{ localStorage.setItem('cp_client_requests', JSON.stringify(requests)); }catch(e){}
-  // Show success
-  document.getElementById('cp-step-form').style.display='none';
-  document.getElementById('cp-step-ok').style.display='block';
-  document.getElementById('cp-ok-title').textContent = t.okTitle;
-  document.getElementById('cp-ok-msg').textContent = t.okMsg;
-  document.getElementById('cp-lang-next').textContent = t.newRep||'Nouveau signalement';
-}
-function cpReset(){
-  document.getElementById('cp-num').value='';
-  document.getElementById('cp-desc').value='';
-  cpSelectedCat='';
-  cpRenderLangStep();
-}
-
-// ══════════════════════════════════════════════
-// STAFF: CLIENT REQUESTS MANAGEMENT
-// ══════════════════════════════════════════════
-function getClientRequests(){
-  try{ return JSON.parse(localStorage.getItem('cp_client_requests')||'[]'); }catch(e){return [];}
-}
-function saveClientRequests(list){
-  try{ localStorage.setItem('cp_client_requests', JSON.stringify(list)); }catch(e){}
-}
-function getClientRequestsCount(){
-  var reqs = getClientRequests();
-  return reqs.filter(function(r){return r.status==='new';}).length;
-}
-
-function renderClientRequests(){
-  var isAdmin = currentUser && (currentUser.role==='admin'||currentUser.role==='responsable');
-  if(!isAdmin) return '<div class="empty"><p>Accès non autorisé</p></div>';
-  var reqs = getClientRequests();
-  var newReqs = reqs.filter(function(r){return r.status==='new';});
-  var otherReqs = reqs.filter(function(r){return r.status!=='new'&&r.status!=='deleted';});
-
-  var qrUrl = window.location.href.split('?')[0] + '?client=1';
-
-  var h = '<div class="page-hd"><div><div class="page-title">📨 Requêtes clients</div><div class="page-sub">'+newReqs.length+' nouvelle'+(newReqs.length!==1?'s':'')+' — '+reqs.filter(function(r){return r.status!=='deleted';}).length+' total</div></div></div>';
-
-  // QR code section
-  h += '<div style="background:#fff;border-radius:16px;padding:16px;margin-bottom:14px;border:1px solid #e8e2d9;text-align:center">';
-  h += '<div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em">🔗 Lien QR code client</div>';
-  h += '<div style="font-size:11px;color:var(--text3);word-break:break-all;background:#f8f6f2;padding:8px 10px;border-radius:8px;margin-bottom:8px">'+qrUrl+'</div>';
-  h += '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">';
-  h += '<button class="btn-add" style="font-size:12px;padding:7px 14px" onclick="copyClientLink()">📋 Copier le lien</button>';
-  h += '<button class="btn-add" style="font-size:12px;padding:7px 14px;background:linear-gradient(135deg,#2d6a4f,#52b788)" onclick="showQRCode()">📱 QR Code</button>';
-  h += '</div></div>';
-
-  // New requests
-  if(newReqs.length===0){
-    h += '<div style="background:#e8f5ee;border-radius:14px;padding:16px;text-align:center;margin-bottom:14px"><div style="font-size:28px">✅</div><div style="font-size:14px;font-weight:600;color:#1a3a2a">Aucune nouvelle requête client</div></div>';
-  } else {
-    h += '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin:0 0 8px;display:flex;align-items:center;gap:8px">🔔 Nouvelles requêtes <span style="background:#9b59b6;color:#fff;border-radius:99px;padding:2px 8px;font-size:10px">'+newReqs.length+'</span></div>';
-    newReqs.forEach(function(r){ h += renderClientReq(r, true); });
-  }
-
-  // Processed
-  if(otherReqs.length>0){
-    h += '<div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin:16px 0 8px">📁 Traitées / Converties</div>';
-    otherReqs.forEach(function(r){ h += renderClientReq(r, false); });
-  }
-
-  return h;
-}
-
-function renderClientReq(r, isNew){
-  var ago = timeAgo(r.created_at);
-  var statusColors = {new:'#9b59b6', seen:'#3498db', converted:'#27ae60'};
-  var statusLabels = {new:'Nouveau', seen:'Vue', converted:'Convertie en tâche'};
-  var sc = statusColors[r.status]||'#888';
-  var sl = statusLabels[r.status]||r.status;
-  var h = '<div style="background:#fff;border-radius:16px;padding:14px 16px;margin-bottom:10px;border:1.5px solid '+(isNew?'#9b59b6':'#e8e2d9')+';position:relative">';
-  h += '<div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap">';
-  h += '<div style="flex:1;min-width:200px">';
-  h += '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px">';
-  h += '<span style="background:'+sc+'22;color:'+sc+';border-radius:99px;padding:2px 9px;font-size:11px;font-weight:700;border:1px solid '+sc+'44">'+sl+'</span>';
-  h += '<span style="background:var(--sand);border-radius:99px;padding:2px 9px;font-size:11px;font-weight:600;color:var(--text2)">📍 Empl. n°'+r.emplacement+'</span>';
-  if(r.categorie) h += '<span style="font-size:12px;color:var(--text3)">'+r.categorie+'</span>';
-  h += '<span style="font-size:11px;color:var(--text3)">'+ago+'</span>';
-  h += '</div>';
-  h += '<div style="font-size:14px;color:var(--text);line-height:1.4">'+r.texte+'</div>';
-  h += '<div style="font-size:11px;color:var(--text3);margin-top:4px">🌐 '+r.lang.toUpperCase()+'</div>';
-  h += '</div>';
-  h += '<div style="display:flex;flex-direction:column;gap:5px;flex:none">';
-  if(r.status==='new'){
-    h += '<button class="btn-add" style="font-size:11px;padding:5px 10px;background:var(--blue);white-space:nowrap" onclick="clientReqMarkSeen(\''+r.id+'\')">👁 Marquer vue</button>';
-  }
-  h += '<button class="btn-add" style="font-size:11px;padding:5px 10px;background:linear-gradient(135deg,#27ae60,#52b788);white-space:nowrap" onclick="clientReqConvert(\''+r.id+'\')">➡ Créer tâche</button>';
-  h += '<button class="btn-add" style="font-size:11px;padding:5px 10px;background:var(--warn);white-space:nowrap" onclick="clientReqEdit(\''+r.id+'\')">✏️ Modifier</button>';
-  h += '<button class="ibtn danger" style="font-size:11px;padding:6px 9px" onclick="clientReqDelete(\''+r.id+'\')"><svg viewBox="0 0 24 24" style="width:14px;height:14px"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg></button>';
-  h += '</div>';
-  h += '</div>';
-  h += '</div>';
-  return h;
-}
-
-function clientReqMarkSeen(id){
-  var reqs = getClientRequests();
-  var r = reqs.find(function(x){return x.id===id;});
-  if(r) r.status='seen';
-  saveClientRequests(reqs);
-  buildNav(); render();
-  toast('Requête marquée comme vue');
-}
-
-function clientReqDelete(id){
-  showModal('Supprimer cette requête ?','La requête client sera supprimée définitivement.',function(){
-    var reqs = getClientRequests().filter(function(x){return x.id!==id;});
-    saveClientRequests(reqs);
-    buildNav(); render();
-    toast('Requête supprimée');
-  });
-}
-
-function clientReqConvert(id){
-  var reqs = getClientRequests();
-  var r = reqs.find(function(x){return x.id===id;});
-  if(!r) return;
-  // Show conversion modal
-  var txt = r.categorie ? r.categorie+' — '+r.texte : r.texte;
-  var d = document.createElement('div');
-  d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
-  d.innerHTML='<div style="background:#fff;border-radius:18px;padding:22px;max-width:420px;width:100%">'
-    +'<div style="font-weight:800;font-size:16px;margin-bottom:14px">➡ Créer une tâche depuis la requête</div>'
-    +'<div style="font-size:12px;color:#666;margin-bottom:8px">Emplacement n°'+r.emplacement+'</div>'
-    +'<textarea id="ccv-txt" style="width:100%;box-sizing:border-box;border:1.5px solid #ddd;border-radius:10px;padding:10px;font-size:14px;resize:vertical;min-height:70px;font-family:inherit">'+txt+'</textarea>'
-    +'<div style="display:flex;gap:8px;margin-top:10px">'
-    +'<select id="ccv-mod" style="flex:1;border:1.5px solid #ddd;border-radius:8px;padding:8px;font-size:13px">'
-    +'<option value="technique">🔧 Technique</option><option value="menage">🧹 Ménage</option><option value="accueil">🛎 Accueil</option>'
-    +'</select>'
-    +'<select id="ccv-prio" style="flex:1;border:1.5px solid #ddd;border-radius:8px;padding:8px;font-size:13px">'
-    +'<option value="normal">🟢 Normal</option><option value="high">🟠 Urgent</option><option value="urgent">🔴 Très urgent</option>'
-    +'</select></div>'
-    +'<div style="display:flex;gap:8px;margin-top:12px">'
-    +'<button onclick="this.closest(\'div[style]\').remove()" style="flex:1;padding:10px;border:1.5px solid #ddd;border-radius:8px;background:#fff;cursor:pointer">Annuler</button>'
-    +'<button onclick="doConvertReq(\''+id+'\',this)" style="flex:2;padding:10px;border:none;border-radius:8px;background:linear-gradient(135deg,#27ae60,#52b788);color:#fff;font-weight:700;font-size:14px;cursor:pointer">✅ Créer la tâche</button>'
-    +'</div></div>';
-  document.body.appendChild(d);
-}
-
-function doConvertReq(id, btn){
-  var overlay = btn.closest('div[style*="fixed"]');
-  var txtEl = document.getElementById('ccv-txt');
-  var modEl = document.getElementById('ccv-mod');
-  var prioEl = document.getElementById('ccv-prio');
-  var txt = txtEl ? txtEl.value.trim() : '';
-  var mod = modEl ? modEl.value : 'technique';
-  var prio = prioEl ? prioEl.value : 'normal';
-  if(!txt){ alert('Texte requis'); return; }
-
-  var reqs = getClientRequests();
-  var r = reqs.find(function(x){return x.id===id;});
-
-  // Create task
-  var newTask = {
-    id: 't'+Date.now()+Math.random(),
-    texte: txt + ' [Client empl. n°'+(r?r.emplacement:'?')+']',
-    priorite: prio,
-    agent_id: 'pole_'+mod,
-    done: false,
-    note: '',
-    recur: false,
-    created_at: Date.now(),
-    done_at: null,
-    logement_num: r ? parseInt(r.emplacement) : null,
-    source_client: true
-  };
-  TASKS[mod].unshift(newTask);
-  save();
-
-  // Mark converted
-  if(r) r.status='converted';
-  saveClientRequests(reqs);
-
-  if(overlay) overlay.remove();
-  buildNav(); render();
-  toast('✅ Tâche créée dans ' + (mod==='menage'?'Ménage':mod==='technique'?'Technique':'Accueil'));
-}
-
-function clientReqEdit(id){
-  var reqs = getClientRequests();
-  var r = reqs.find(function(x){return x.id===id;});
-  if(!r) return;
-  var d = document.createElement('div');
-  d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9999;display:flex;align-items:center;justify-content:center;padding:16px';
-  d.innerHTML='<div style="background:#fff;border-radius:18px;padding:22px;max-width:420px;width:100%">'
-    +'<div style="font-weight:800;font-size:16px;margin-bottom:14px">✏️ Modifier la requête</div>'
-    +'<textarea id="ced-txt" style="width:100%;box-sizing:border-box;border:1.5px solid #ddd;border-radius:10px;padding:10px;font-size:14px;resize:vertical;min-height:90px;font-family:inherit">'+r.texte+'</textarea>'
-    +'<div style="display:flex;gap:8px;margin-top:12px">'
-    +'<button onclick="this.closest(\'div[style]\').remove()" style="flex:1;padding:10px;border:1.5px solid #ddd;border-radius:8px;background:#fff;cursor:pointer">Annuler</button>'
-    +'<button onclick="doEditReq(\''+id+'\',this)" style="flex:2;padding:10px;border:none;border-radius:8px;background:var(--blue);color:#fff;font-weight:700;font-size:14px;cursor:pointer">💾 Enregistrer</button>'
-    +'</div></div>';
-  document.body.appendChild(d);
-}
-
-function doEditReq(id, btn){
-  var overlay = btn.closest('div[style*="fixed"]');
-  var txtEl = document.getElementById('ced-txt');
-  var txt = txtEl ? txtEl.value.trim() : '';
-  if(!txt){ alert('Texte requis'); return; }
-  var reqs = getClientRequests();
-  var r = reqs.find(function(x){return x.id===id;});
-  if(r){ r.texte = txt; r.status = r.status==='new'?'new':'seen'; }
-  saveClientRequests(reqs);
-  if(overlay) overlay.remove();
-  render();
-  toast('Requête modifiée');
-}
-
-function copyClientLink(){
-  var url = window.location.href.split('?')[0] + '?client=1';
-  if(navigator.clipboard){ navigator.clipboard.writeText(url).then(function(){ toast('Lien copié !'); }); }
-  else{ var ta=document.createElement('textarea');ta.value=url;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('Lien copié !'); }
-}
-
-function showQRCode(){
-  var url = window.location.href.split('?')[0] + '?client=1';
-  var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data='+encodeURIComponent(url);
-  var d = document.createElement('div');
-  d.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px';
-  d.innerHTML='<div style="background:#fff;border-radius:18px;padding:24px;text-align:center;max-width:280px;width:100%">'
-    +'<div style="font-weight:800;font-size:16px;margin-bottom:12px">📱 QR Code Client</div>'
-    +'<img src="'+qrUrl+'" style="width:220px;height:220px;border-radius:8px;display:block;margin:0 auto 12px" alt="QR Code"/>'
-    +'<div style="font-size:11px;color:#888;margin-bottom:14px;word-break:break-all">'+url+'</div>'
-    +'<button onclick="this.closest(\'div[style]\').remove()" style="width:100%;padding:10px;border:1.5px solid #ddd;border-radius:8px;background:#fff;cursor:pointer;font-size:14px">Fermer</button>'
-    +'</div>';
-  d.addEventListener('click',function(e){if(e.target===d)d.remove();});
-  document.body.appendChild(d);
-}
-</script>
 
 </body>
 </html>
